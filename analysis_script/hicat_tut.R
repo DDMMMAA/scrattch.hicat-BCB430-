@@ -1,10 +1,20 @@
 library(tasic2016data)
 # library(scrattch.hicat) comment out to use source package in this r project
 # rather than downloaded package
+library(devtools)
+library(roxygen2)
+library(knitr)
+library(testthat)
+library(usethis)
 library(dendextend)
 library(dplyr)
 library(matrixStats)
 library(Matrix)
+
+######################
+# load package in dev mode
+######################
+load_all()
 
 ######################
 # data preparation
@@ -48,12 +58,12 @@ norm.dat <- log2(tasic_2016_cpm + 1)
 ######################
 # parameter setting
 ######################
-de.param <- de_param(padj.th     = 0.1, 
+de.param <- de_param(padj.th     = 0.5, 
                      lfc.th      = 1, 
                      low.th      = 1, 
-                     q1.th       = 0.1,
+                     q1.th       = 0.5,
                      q2.th       = NULL,
-                     q.diff.th   = 0, 
+                     q.diff.th   = 0.7, 
                      de.score.th = 40,
                      min.cells = 10)
 
@@ -76,7 +86,44 @@ strict.param <- de_param(de.score.th = 500)
 
 onestep.result <- onestep_clust(norm.dat, 
                                 select.cells = select.cells, 
-                                dim.method = "pca", 
+                                dim.method = "WGCNA", 
                                 de.param = strict.param, 
                                 rm.eigen = rm.eigen)
 display.result <- display_cl(onestep.result$cl, norm.dat, plot = TRUE, de.param = de.param)
+
+# Iterative clustering
+iter.result <- iter_clust(norm.dat, 
+                          select.cells = select.cells, 
+                          dim.method = "WGCNA", 
+                          de.param = de.param, 
+                          rm.eigen = rm.eigen,
+                          result = onestep.result)
+display.result <- display_cl(iter.result$cl, norm.dat, plot = TRUE, de.param = de.param)
+
+####################
+# Merging
+####################
+rd.dat <- t(norm.dat[iter.result$markers, select.cells])
+
+merge.param <- de_param(de.score.th = 70) # The original value was 40.
+
+merge.result <- merge_cl(norm.dat, 
+                         cl = iter.result$cl, 
+                         rd.dat = rd.dat,
+                         de.param = merge.param)
+
+display.result <- display_cl(merge.result$cl, 
+                             norm.dat, 
+                             plot = TRUE, 
+                             de.param = merge.param)
+
+# Compare pre- and post-merged clusters
+# Set up the cl and cl.df objects for use with compare_annotate()
+iter.cl <- setNames(as.factor(iter.result$cl), select.cells)
+iter.cl.df <- data.frame(cluster_id = unique(iter.cl),
+                         cluster_label = paste0("Pre-merge_cl_",unique(iter.cl)),
+                         cluster_color = rainbow(length(unique(iter.cl))))
+rownames(iter.cl.df) <- iter.cl.df$cluster_id
+
+compare.result <- compare_annotate(merge.result$cl, iter.cl, iter.cl.df)
+compare.result$g
