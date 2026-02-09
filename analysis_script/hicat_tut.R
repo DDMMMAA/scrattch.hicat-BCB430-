@@ -10,6 +10,12 @@ library(dendextend)
 library(dplyr)
 library(matrixStats)
 library(Matrix)
+library(survival)
+library(cluster)
+library(impute)
+library(mgcv)
+library(foreign)
+library(WGCNA)
 
 ######################
 # load package in dev mode
