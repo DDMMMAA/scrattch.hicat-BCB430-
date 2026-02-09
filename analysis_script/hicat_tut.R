@@ -133,3 +133,9 @@ rownames(iter.cl.df) <- iter.cl.df$cluster_id
 
 compare.result <- compare_annotate(merge.result$cl, iter.cl, iter.cl.df)
 compare.result$g
+
+# Generate comparison
+compare.result <- compare_annotate(iter.result$cl, ref.cl, ref.cl.df)
+# Output the plot
+compare.result$g
+
