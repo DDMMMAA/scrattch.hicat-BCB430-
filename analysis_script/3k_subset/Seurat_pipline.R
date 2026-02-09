@@ -4,6 +4,7 @@ library(bigstatsr)
 library(Matrix)
 library(RcppParallel)
 library(matrixStats)
+library(ggplot2)
 
 ##############
 # load data
