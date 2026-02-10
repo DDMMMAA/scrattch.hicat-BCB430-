@@ -161,10 +161,10 @@ for (var in group_vars) {
 #################
 # DE analysis
 # Identify markers of each cluster
-all.markers <- FindAllMarkers(object = `3k_subset_seurat`)
-all.markers <- split(all.markers, all.markers$cluster)
+`3k_subset_marker` <- FindAllMarkers(object = `3k_subset_seurat`)
+`3k_subset_marker` <- split(`3k_subset_marker`, `3k_subset_marker`$cluster)
 
-# filtered_markers <- lapply(all.markers, function(df) {
+# filtered_markers <- lapply(`3k_subset_marker`, function(df) {
 #   subset(df, 
 #          pct.1 > 0.1 &           # Criteria A
 #            pct.2 > 0.1 &           # Criteria B
@@ -172,20 +172,147 @@ all.markers <- split(all.markers, all.markers$cluster)
 #            (avg_log2FC > 0.25 | avg_log2FC < -0.25)) # Criteria D
 # })
 
-all.markers <- lapply(all.markers, function(df) {
+
+
+`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
   df$p_FC <- (1 - df$p_val) * df$avg_log2FC
   return(df)
 })
 
-all.markers <- lapply(all.markers, function(df) {
+`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
   df$adj_diff <- abs(df$pct.1 - df$pct.2)/max(c(df$pct.1, df$pct.2))
   return(df)
 })
 
-all.markers <- lapply(all.markers, function(df) {
+`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
   df$diff_pfc <- df$adj_diff * df$p_FC
   return(df)
 })
+################
+# age, sex, roi associated DE AMONG whole dataset
+# Goal: Find DE genes for Sex, Age, and ROI across all cells
+
+# 1. Define the variables we want to loop through
+variables_to_test <- c("sex", "age_cat", "roi")
+
+# 2. Initialize a list to store results
+# New Structure: de_results$Variable_Name (No longer nested by subclass)
+global_de_results <- list()
+
+# 3. Main Loop (Iterate through variables only)
+for (var in variables_to_test) {
+  
+  message(paste0("\nProcessing Variable Globally: ", var, " ------------------"))
+  
+  # Use the full object directly
+  # (No subsetting happens here)
+  object_to_test <- `3k_subset_seurat`
+  
+  # Check 1: Does the variable exist in metadata?
+  if (!var %in% colnames(object_to_test@meta.data)) {
+    message(paste("    Skipping: Variable", var, "not found."))
+    next
+  }
+  
+  # Set the identity to the variable of interest
+  Idents(object_to_test) <- var
+  
+  # Check 2: Are there at least 2 groups? 
+  unique_groups <- unique(Idents(object_to_test))
+  unique_groups <- unique_groups[!is.na(unique_groups)] # Remove NAs
+  
+  if (length(unique_groups) < 2) {
+    message(paste("    Skipping: Only 1 group found for", var, "(", unique_groups, ")"))
+    next
+  }
+  
+  # C. Run DE Analysis
+  tryCatch({
+    markers <- FindAllMarkers(
+      object = object_to_test,
+      only.pos = TRUE,       # Only look for upregulated genes
+      verbose = FALSE, 
+      logfc.threshold = 0.1, 
+      min.pct = 0.01,
+      min.diff.pct = -Inf    # Keep Seurat defaults or your specific params
+    )
+    
+    # D. Add Custom Metrics
+    if (nrow(markers) > 0) {
+      # Calculate p_FC
+      markers$p_FC <- (1 - markers$p_val) * markers$avg_log2FC
+      
+      # Calculate difference in proportion
+      markers$adj_diff <- abs(markers$pct.1 - markers$pct.2) / pmax(markers$pct.1, markers$pct.2)
+      
+      # Calculate combined score
+      markers$diff_pfc <- markers$adj_diff * markers$p_FC
+      
+      # Save to list (Key is just the variable name now)
+      global_de_results[[var]] <- markers
+      message(paste("    Found", nrow(markers), "markers."))
+      
+    } else {
+      message("    No significant markers found.")
+    }
+    
+  }, error = function(e) {
+    message(paste("    Error running DE for", var, ":", e$message))
+  })
+}
+
+# Optional: Save the global results
+saveRDS(global_de_results, file = "data/Result/global_DE_results.rds")
+
+# plot number of DE
+# 1. Initialize empty list for summary data
+plot_data_list <- list()
+
+# 2. Loop through the results to extract counts
+# 'de_results' is the list you created in the previous step
+for (var_name in names(global_de_results)) {
+  
+  # Get the results dataframe for this variable
+  df <- global_de_results[[var_name]]
+  
+  if (!is.null(df) && nrow(df) > 0) {
+    # Count the number of markers per group (stored in 'cluster' column)
+    summary_df <- df %>%
+      group_by(cluster) %>%
+      summarise(Count = n()) %>%
+      mutate(Variable = var_name) # Add label for the variable type
+    
+    plot_data_list[[var_name]] <- summary_df
+  }
+}
+
+# 3. Combine into one master dataframe
+plot_data <- do.call(rbind, plot_data_list)
+
+# 4. Create the Plot
+# We use 'facet_wrap' to create separate panels for Sex, Age, and ROI
+p <- ggplot(plot_data, aes(x = cluster, y = Count, fill = cluster)) +
+  geom_col() + 
+  geom_text(aes(label = Count), vjust = -0.5, size = 3.5) + # Add numbers on top
+  facet_wrap(~Variable, scales = "free_x", strip.position = "top") + # Separate panels
+  theme_classic() +
+  labs(
+    title = "Number of DE Genes by Criteria",
+    subtitle = "Non-neuronal 3k DE result",
+    x = "Group",
+    y = "Number of DE Genes",
+    fill = "Group"
+  ) +
+  theme(
+    legend.position = "none", # Hide legend (colors are self-explanatory)
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    strip.background = element_rect(fill = "lightgrey"), # Style the panel headers
+    strip.text = element_text(face = "bold", size = 12)
+  )
+
+# 5. Save and Print
+ggsave("data/Result/Global_DE_Counts.png", p, width = 10, height = 6)
+print(p)
 
 #################
 # Subclass-Specific DE Analysis
@@ -274,9 +401,12 @@ for (subclass in target_subclasses) {
   }
 }
 
+saveRDS(de_results, file = "data/Result/DE_results.rds")
+
 #################
 # 1. Extract the number of DE genes from the 'de_results' list
 # Initialize an empty list to store the counts
+
 summary_list <- list()
 
 # Loop through the nested list
