@@ -242,7 +242,10 @@ for (subclass in target_subclasses) {
       markers <- FindAllMarkers(
         object = sub_obj,
         only.pos = TRUE,       # Only look for upregulated genes (standard for markers)
-        verbose = FALSE
+        verbose = FALSE, 
+        logfc.threshold = 0.1, 
+        min.pct = 0.01, 
+        min.diff.pct = -Inf
       )
       
       # D. Add your Custom Metrics (p_FC, etc.)
