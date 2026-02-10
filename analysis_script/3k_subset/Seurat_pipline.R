@@ -174,20 +174,20 @@ for (var in group_vars) {
 
 
 
-`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
-  df$p_FC <- (1 - df$p_val) * df$avg_log2FC
-  return(df)
-})
-
-`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
-  df$adj_diff <- abs(df$pct.1 - df$pct.2)/max(c(df$pct.1, df$pct.2))
-  return(df)
-})
-
-`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
-  df$diff_pfc <- df$adj_diff * df$p_FC
-  return(df)
-})
+#`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
+#  df$p_FC <- (1 - df$p_val) * df$avg_log2FC
+#  return(df)
+#})
+#
+#`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
+#  df$adj_diff <- abs(df$pct.1 - df$pct.2)/max(c(df$pct.1, df$pct.2))
+#  return(df)
+#})
+#
+#`3k_subset_marker` <- lapply(`3k_subset_marker`, function(df) {
+#  df$diff_pfc <- df$adj_diff * df$p_FC
+#  return(df)
+#})
 ################
 # age, sex, roi associated DE AMONG whole dataset
 # Goal: Find DE genes for Sex, Age, and ROI across all cells
