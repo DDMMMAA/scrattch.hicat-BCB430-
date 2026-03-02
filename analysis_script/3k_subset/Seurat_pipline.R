@@ -11,6 +11,11 @@ library(roxygen2)
 library(testthat)
 library(usethis)
 library(patchwork)
+library(impute)
+library(WGCNA)
+library(clusterProfiler)
+library(org.Mm.eg.db)
+library(enrichplot)
 
 ##############
 # load current r project as package
@@ -19,9 +24,9 @@ load_all()
 ##############
 # load data
 # seurat object
-`3k_subset_seurat` <- readRDS("D:/BCB430/scrattch.hicat-BCB430-/data/Allen/3k_subset_seurat.rds")
+`3k_subset_seurat` <- readRDS("D:/scrattch.hicat-BCB430-/data/Allen/3k_subset_seurat.rds")
 # expression matrix
-`3k_subset_expression_matrix` <- readRDS("D:/BCB430/scrattch.hicat-BCB430-/data/Allen/3k_subset_expression_matrix.rds")
+`3k_subset_expression_matrix` <- readRDS("D:/scrattch.hicat-BCB430-/data/Allen/3k_subset_expression_matrix.rds")
 
 ############
 # EDA
@@ -404,6 +409,77 @@ for (subclass in target_subclasses) {
 saveRDS(de_results, file = "data/Result/DE_results.rds")
 
 #################
+# extract top 15 DE gene sorted by adjusted p_value
+# ------------------------------------------------------------------
+# 1. Base Directory Setup
+# ------------------------------------------------------------------
+base_dir_top15_global <- file.path("data", "Result", "cluster", "3k_subset", "Top15_DE", "global")
+base_dir_top15_subclass <- file.path("data", "Result", "cluster", "3k_subset", "Top15_DE", "subclass")
+
+# ------------------------------------------------------------------
+# 2. Extraction and Export Function
+# ------------------------------------------------------------------
+extract_and_save_top15 <- function(de_df, out_path) {
+  
+  # Validation: Ensure dataframe exists and is not empty
+  if (is.null(de_df) || nrow(de_df) == 0) return(invisible())
+  
+  # Group by cluster to ensure we get top 15 PER condition
+  # Primary sort: p_val_adj (ascending / non-decreasing)
+  # Secondary sort: absolute avg_log2FC (descending) to break p-value ties
+  top15_df <- de_df %>%
+    group_by(cluster) %>%
+    arrange(p_val_adj, desc(abs(avg_log2FC))) %>%
+    slice_head(n = 15) %>%
+    ungroup()
+  
+  # Write to structured CSV
+  write.csv(top15_df, file = out_path, row.names = FALSE)
+}
+
+# ------------------------------------------------------------------
+# 3. Execute Loop: Global Top 15 DE
+# ------------------------------------------------------------------
+message("\nExtracting top 15 global DE genes...")
+
+for (var in names(global_de_results)) {
+  
+  # Construct nested directory: .../Top15_DE/global/<Variable>/
+  var_dir <- file.path(base_dir_top15_global, var)
+  dir.create(var_dir, recursive = TRUE, showWarnings = FALSE)
+  
+  # Define file path
+  out_file <- file.path(var_dir, paste0("Global_", var, "_top15.csv"))
+  
+  extract_and_save_top15(global_de_results[[var]], out_file)
+}
+
+# ------------------------------------------------------------------
+# 4. Execute Loop: Subclass Top 15 DE
+# ------------------------------------------------------------------
+message("Extracting top 15 subclass DE genes...")
+
+for (subclass in names(de_results)) {
+  
+  # Enforce string sanitization for directory creation
+  safe_subclass <- gsub("[ /]", "_", subclass)
+  
+  for (var in names(de_results[[subclass]])) {
+    
+    # Construct exact nested path: .../Top15_DE/subclass/<Subclass_Name>/<Criteria>/
+    nested_dir <- file.path(base_dir_top15_subclass, safe_subclass, var)
+    dir.create(nested_dir, recursive = TRUE, showWarnings = FALSE)
+    
+    # Define file path
+    out_file <- file.path(nested_dir, paste0(safe_subclass, "_", var, "_top15.csv"))
+    
+    extract_and_save_top15(de_results[[subclass]][[var]], out_file)
+  }
+}
+
+message("Top 15 DE extraction mapped to hierarchical directories.")
+
+#################
 # 1. Extract the number of DE genes from the 'de_results' list
 # Initialize an empty list to store the counts
 
@@ -457,3 +533,189 @@ p <- ggplot(plot_data, aes(x = Subclass, y = Count, fill = Variable)) +
 # 4. Display and Save
 print(p)
 ggsave("data/Result/cluster/3k_subset/DE_Counts_Summary.png", p, width = 10, height = 8)
+
+###################
+# GO enrichment
+# 1. Define a helper function to run GO on a single DE dataframe
+run_go_comparison <- function(de_df, organism_db = org.Mm.eg.db) {
+  
+  # Return NULL if the dataframe is empty
+  if (is.null(de_df) || nrow(de_df) == 0) return(NULL)
+  
+  # Filter for significant genes (Adjust thresholds as needed)
+  sig_df <- de_df %>%
+    filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.25)
+  
+  # Return NULL if there aren't enough genes to compare
+  if (nrow(sig_df) < 5) {
+    message("    Not enough significant genes for GO enrichment.")
+    return(NULL)
+  }
+  
+  # Run Biological Process (BP) comparison
+  message("    Running GO: Biological Process (BP)...")
+  go_bp <- compareCluster(
+    gene ~ cluster, 
+    data = sig_df, 
+    fun = "enrichGO",
+    OrgDb = organism_db,
+    keyType = "SYMBOL", # Seurat usually outputs Gene Symbols
+    ont = "BP",
+    pAdjustMethod = "BH",
+    pvalueCutoff = 0.05,
+    qvalueCutoff = 0.2
+  )
+  
+  # Run Molecular Function (MF) comparison
+  message("    Running GO: Molecular Function (MF)...")
+  go_mf <- compareCluster(
+    gene ~ cluster, 
+    data = sig_df, 
+    fun = "enrichGO",
+    OrgDb = organism_db,
+    keyType = "SYMBOL",
+    ont = "MF",
+    pAdjustMethod = "BH",
+    pvalueCutoff = 0.05,
+    qvalueCutoff = 0.2
+  )
+  
+  # Return a list containing both results
+  return(list(BP = go_bp, MF = go_mf))
+}
+
+# ---------------------------------------------------------
+# 2. Process global_de_results
+# ---------------------------------------------------------
+message("\nStarting Global GO Enrichment...")
+global_go_results <- list()
+
+for (var in names(global_de_results)) {
+  message(paste("\nProcessing Global Variable:", var))
+  global_go_results[[var]] <- run_go_comparison(global_de_results[[var]])
+}
+
+# Save global GO results
+saveRDS(global_go_results, file = "data/Result/global_GO_results.rds")
+
+
+# ---------------------------------------------------------
+# 3. Process nested de_results (Subclass-specific)
+# ---------------------------------------------------------
+message("\nStarting Subclass-Specific GO Enrichment...")
+subclass_go_results <- list()
+
+for (subclass in names(de_results)) {
+  message(paste("\n--- Processing Subclass:", subclass, "---"))
+  
+  subclass_go_results[[subclass]] <- list()
+  
+  for (var in names(de_results[[subclass]])) {
+    message(paste("  Variable:", var))
+    
+    # Run the helper function and store it in the nested list
+    subclass_go_results[[subclass]][[var]] <- run_go_comparison(de_results[[subclass]][[var]])
+  }
+}
+
+# Save subclass GO results
+saveRDS(subclass_go_results, file = "data/Result/subclass_GO_results.rds")
+message("\nGO Enrichment complete!")
+
+# GO visualization
+# ------------------------------------------------------------------
+# 1. Base Directory Setup
+# ------------------------------------------------------------------
+base_dir_global <- file.path("data", "Result", "cluster", "3k_subset", "GO_plots", "global")
+base_dir_subclass <- file.path("data", "Result", "cluster", "3k_subset", "GO_plots", "subclass")
+
+# ------------------------------------------------------------------
+# 2. Refactored Plotting Function
+# ------------------------------------------------------------------
+generate_and_save_plots <- function(go_res_list, title_prefix, file_prefix, out_dir) {
+  
+  if (is.null(go_res_list)) return(invisible())
+  
+  for (ont in names(go_res_list)) {
+    res <- go_res_list[[ont]]
+    
+    # Validation constraint
+    if (!is.null(res) && nrow(as.data.frame(res)) > 0) {
+      
+      message(paste("  Generating plots for:", title_prefix, "-", ont))
+      
+      # -- A. Dotplot --
+      p_dot <- dotplot(res, showCategory = 5) + 
+        ggtitle(paste(title_prefix, "-", ont)) +
+        theme(plot.title = element_text(face = "bold", size = 12, hjust = 0.5))
+      
+      # Save to dynamically assigned out_dir
+      ggsave(filename = file.path(out_dir, paste0(file_prefix, "_", ont, "_dotplot.png")), 
+             plot = p_dot, width = 10, height = 8, bg = "white")
+      
+      # -- B. Cnetplot --
+      tryCatch({
+        p_cnet <- cnetplot(res, showCategory = 4, layout = "kk", colorEdge = TRUE, node_label = "all") + 
+          ggtitle(paste(title_prefix, "-", ont, "Network")) +
+          theme(plot.title = element_text(face = "bold", size = 12, hjust = 0.5))
+        
+        ggsave(filename = file.path(out_dir, paste0(file_prefix, "_", ont, "_cnetplot.png")), 
+               plot = p_cnet, width = 12, height = 10, bg = "white")
+        
+      }, error = function(e) {
+        message(paste("    [Warning] Failed cnetplot layout for", file_prefix, ont, "-", e$message))
+      })
+      
+    } else {
+      message(paste("  [Skip] No significant terms for:", title_prefix, "-", ont))
+    }
+  }
+}
+
+# ------------------------------------------------------------------
+# 3. Execute Loop: Global Results
+# ------------------------------------------------------------------
+message("\nProcessing Global GO visualizations...")
+
+for (var in names(global_go_results)) {
+  
+  # Construct and execute directory creation: .../global/<Variable>/
+  var_dir <- file.path(base_dir_global, var)
+  dir.create(var_dir, recursive = TRUE, showWarnings = FALSE)
+  
+  generate_and_save_plots(
+    go_res_list = global_go_results[[var]],
+    title_prefix = paste("Global", toupper(var)),
+    file_prefix = paste0("Global_", var),
+    out_dir = var_dir
+  )
+}
+
+# ------------------------------------------------------------------
+# 4. Execute Loop: Subclass Results (Nested Architecture)
+# ------------------------------------------------------------------
+message("\nProcessing Subclass-specific GO visualizations...")
+
+for (subclass in names(subclass_go_results)) {
+  
+  # Critical string sanitization constraint
+  safe_subclass <- gsub("[ /]", "_", subclass)
+  
+  for (var in names(subclass_go_results[[subclass]])) {
+    
+    # Construct exact nested path: .../subclass/<Subclass_Name>/<Criteria>/
+    nested_dir <- file.path(base_dir_subclass, safe_subclass, var)
+    
+    # Enforce directory creation prior to passing to function
+    dir.create(nested_dir, recursive = TRUE, showWarnings = FALSE)
+    
+    generate_and_save_plots(
+      go_res_list = subclass_go_results[[subclass]][[var]],
+      title_prefix = paste(subclass, toupper(var)),
+      file_prefix = paste0(safe_subclass, "_", var),
+      out_dir = nested_dir
+    )
+  }
+}
+
+message("\nAll visualizations mapped to hierarchical directories.")
