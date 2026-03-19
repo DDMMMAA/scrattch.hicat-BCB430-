@@ -47,27 +47,49 @@ knitr::opts_chunk$set(
 
 ...
 
-## Data source
+## Animal Model
 
-...
+To be done in report
+
+## Data Source
+
+Allen Brain Atlas
 
 ## Packages Usage
 
-...
+Note the integration of `hicat` and `seurat`
 
-## Data loading
+## Data loading and trimming
 
-...
+Script for h5ad file loading and trimming
 
 ## Exploritory Data Analysis
 
-...
+Script for exploring subclass, roi, sex, age, and doublet score distribution, 
 
 ## Preprocessing
 
-...
+Mention the raw data from allen is pre-processed and normalized.
 
 ## Clustering
+
+Mention the poor-documented `bigcat` pacakge, note alternation usage of `hicat` pacakge
+
+## Differential Gene Expression Analysis
+
+Use `Seurat` to find DEGs along three aspect, sex, roi, and age. Include script to plot and normalize number of DEGs and modified ranking
+
+## Synteny exploration
+
+Manually browse top DEGs on UCSC genome browser (mm10)
+
+## Reciprical BLAST
+
+Reciprocally BLAST X and Y GM47283 homologous, and against human genome
+
+## Read Assembly algorithm assessment
+
+Cite 10x genomics, cell ranger, STAR
 
 # Result
 
