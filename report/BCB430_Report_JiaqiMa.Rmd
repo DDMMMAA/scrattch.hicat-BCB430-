@@ -45,7 +45,8 @@ knitr::opts_chunk$set(
 
 # Method
 
-...
+![Figure x: BCB430 method roadmap (Created in https://BioRender.com
+)](figure/bcb430_roadmap.png)
 
 ## Animal Model
 
@@ -90,7 +91,17 @@ The following table categorized R packages utilization by biological analysis, d
 | Utilities | `Matrix` | *1.7-3* | Sparse and Dense Matrix data manipulation  | [Bates et al, 2025](https://doi.org/10.32614/CRAN.package.Matrix) |
 | Utilities | `devtools` | *2.4.6* | Grant developer mode for R packages, tunning `scrattch.bigcat` and `scrattch.hicat`  | [Wickham et al, 2025](https://doi.org/10.32614/CRAN.package.devtools) |
 
+## Normalization and quality control
+
+The normalization and quality control step were conducted by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8). The raw counts were log-transformed and z-score normalized. Cells which number of gene detected < 1000 OR QC score < 50 OR Doublet score > 0.3 were removed.
+
 ## Data loading and sub-setting
+
+![Figure x: Schematic of dissected brain regions; The red box indicate subsetted regions. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
+)](figure/allen_region.png)
+
+![Figure x: Schematic of hierarchical "Cell type" annotation; The red box indicate subsetted classes. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
+)](figure/allen_annotation.png)
 
 The downloaded data is in `.h5ad`, popular single-cell transctiptome format in python ecosystem. [annadataR](https://doi.org/10.1101/2025.08.18.669052) was utilized to read `.h5ad` file into R and converted to `seurat object`, basic functional unit in [Seurat](https://satijalab.org/seurat/) pipeline. Then subset the whole HPF dataset by neuro/glia, age, sex, sub-region (roi) to the following subsets for the sake of data management.
 
@@ -111,11 +122,6 @@ The downloaded data is in `.h5ad`, popular single-cell transctiptome format in p
 ## Exploratory Data Analysis
 
 [ggplot2](https://ggplot2.tidyverse.org/) was utilized for visualization. Cell sub_class, roi, sex, age, and Doublet_score, one of the quality control score utilized by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8), proposed by [McGinnis (2019)](https://doi.org/10.1016/j.cels.2019.03.003), were plotted and examined.
-
-
-## Normalization and quality control
-
-The normalization and quality control step were conducted by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8). The raw counts were log-transformed and z-score normalized. Cells which number of gene detected < 1000 OR QC score < 50 OR Doublet score > 0.3 were removed.
 
 ## Clustering
 
