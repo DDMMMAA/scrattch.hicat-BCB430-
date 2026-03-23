@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jiaqi Ma" />
 
-<meta name="date" content="2026-03-19" />
+<meta name="date" content="2026-03-23" />
 
 <title>BCB430 Report</title>
 
@@ -1591,7 +1591,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">BCB430 Report</h1>
 <h4 class="author">Jiaqi Ma</h4>
-<h4 class="date">2026-03-19</h4>
+<h4 class="date">2026-03-23</h4>
 
 </div>
 
@@ -1624,7 +1624,7 @@ font-style: italic;
 <h2><span class="header-section-number">3.2</span> Data Source</h2>
 <ul>
 <li>Single cell RNA-seq (scRNA-seq)</li>
-<li>Origional paper: <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al, 2025</a></li>
+<li>Original paper: <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al, 2025</a></li>
 <li>Deposited in <a href="https://assets.nemoarchive.org/dat-61kfys3">Neuroscience Multi-omic Data Archive (NeMO)</a></li>
 <li>Download url: <a href="https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar" class="uri">https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar</a></li>
 <li>Note: Only Hippocampal formation (HPF) data were subjected to this analysis</li>
@@ -1635,15 +1635,112 @@ font-style: italic;
 <li>Isocortex</li>
 <li>Hippocampal formation (HPF)</li>
 <li>Hypothalamus (HY)</li>
-<li>Cerebral nulei (CNU)</li>
+<li>Cerebral nulcei (CNU)</li>
 <li>Midbrain</li>
 <li>Hindbrain</li>
 </ol>
 </div>
 <div id="packages-usage" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Packages Usage</h2>
-<p><a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al (2025)</a> conduced clustering using unpublished, in-house developed R package <code>scrattch.bigcat (v.0.0.1)</code> (<a href="https://github.com/AllenInstitute/scrattch.bigcat" class="uri">https://github.com/AllenInstitute/scrattch.bigcat</a>), which is a sub-package of <code>scrattch</code> package (<a href="https://alleninstitute.github.io/scrattch/" class="uri">https://alleninstitute.github.io/scrattch/</a>) optimized for extremely large single cell dataset by support parallel computing and in-disk data access. However, because <a href="https://github.com/AllenInstitute/scrattch.bigcat">scrattch.bigcat (v.0.0.1)</a> wasn’t formally released, it was poorly documented and failed to function on local lab machine after weeks’ attempt to rescue. Thus, an alternative sub-package of <a href="https://alleninstitute.github.io/scrattch/">scrattch</a>, <code>scrattch.hicat</code> (<a href="https://github.com/AllenInstitute/scrattch.hicat" class="uri">https://github.com/AllenInstitute/scrattch.hicat</a>), was utilized. <a href="https://github.com/AllenInstitute/scrattch.hicat">scrattch.hicat</a> doesn’t support parallel computing and in-disk data access, but provide better documentation.</p>
 <p><a href="https://satijalab.org/seurat/">Seurat</a> (<a href="https://satijalab.org/seurat/">Hao et al, 2023</a>) was utilized as basic frame work, to take advantage of it mature pipeline.</p>
+<p>The following table categorized R packages utilization by biological analysis, data visualization, and pipeline utilities within this project based on their primary functionality.</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Category</th>
+<th align="left">Package</th>
+<th align="left">Version</th>
+<th align="left">Description</th>
+<th align="left">Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Analytical</td>
+<td align="left"><code>Seurat</code></td>
+<td align="left"><em>5.4.0</em></td>
+<td align="left">Basic framework for data management, Differential Gene Expression (DEG) analysis, and Umap visualization</td>
+<td align="left"><a href="https://satijalab.org/seurat/">Hao et al, 2023</a></td>
+</tr>
+<tr class="even">
+<td align="left">Analytical</td>
+<td align="left"><code>scrattch.bigcat</code></td>
+<td align="left"><em>0.0.1</em></td>
+<td align="left">Initially selected for clustering, the same package utlized by <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al, 2025</a>. <strong>Note:</strong> Utilization was unsuccessful due to limited documentation and local compatibility issues.</td>
+<td align="left">Unpublished; <a href="https://github.com/AllenInstitute/scrattch.bigcat">github</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Analytical</td>
+<td align="left"><code>scrattch.hicat</code></td>
+<td align="left"><em>1.0.0</em></td>
+<td align="left">Alternative clustering package utilized; selected for superior documentation.</td>
+<td align="left">Unpublished; <a href="https://github.com/AllenInstitute/scrattch.hicat">github</a></td>
+</tr>
+<tr class="even">
+<td align="left">Analytical</td>
+<td align="left"><code>Presto</code></td>
+<td align="left"><em>1.0.0</em></td>
+<td align="left">Fast implimentation of Wilcoxon Rank Sum test</td>
+<td align="left"><a href="https://doi.org/10.1101/653253">Nathan &amp; Raychaudhuri, 2019</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Visualization</td>
+<td align="left"><code>ggplot2</code></td>
+<td align="left"><em>4.0.1</em></td>
+<td align="left">Exploratory Data Analysis (EDA); visualization of cell subclass, ROI, sex, age, and doublet scores.</td>
+<td align="left"><a href="https://ggplot2.tidyverse.org">Wickham, 2016</a></td>
+</tr>
+<tr class="even">
+<td align="left">Visualization</td>
+<td align="left"><code>patchwork</code></td>
+<td align="left"><em>1.3.2</em></td>
+<td align="left">Plots Composer</td>
+<td align="left"><a href="https://patchwork.data-imaginist.com">Pedersen, 2025</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Utilities</td>
+<td align="left"><code>annadataR</code></td>
+<td align="left"><em>[To be find on lab machine]</em></td>
+<td align="left">Data loading; converting Python-native <code>.h5ad</code> formats into R-compatible Seurat objects.</td>
+<td align="left"><a href="https://doi.org/10.1101/2025.08.18.669052">Deconinck et al, 2026</a></td>
+</tr>
+<tr class="even">
+<td align="left">Utilities</td>
+<td align="left"><code>bookdown</code></td>
+<td align="left"><em>0.46</em></td>
+<td align="left">HTML report formatting and generation.</td>
+<td align="left"><a href="https://bookdown.org/yihui/bookdown">Xie, 2016</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Utilities</td>
+<td align="left"><code>knitr</code></td>
+<td align="left"><em>1.51</em></td>
+<td align="left">R Markdown environment configuration and dynamic table rendering.</td>
+<td align="left"><a href="https://yihui.org/knitr/">Xie, 2014</a></td>
+</tr>
+<tr class="even">
+<td align="left">Utilities</td>
+<td align="left"><code>Matrix</code></td>
+<td align="left"><em>1.7-3</em></td>
+<td align="left">Sparse and Dense Matrix data manipulation</td>
+<td align="left"><a href="https://doi.org/10.32614/CRAN.package.Matrix">Bates et al, 2025</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Utilities</td>
+<td align="left"><code>devtools</code></td>
+<td align="left"><em>2.4.6</em></td>
+<td align="left">Grant developer mode for R packages, tunning <code>scrattch.bigcat</code> and <code>scrattch.hicat</code></td>
+<td align="left"><a href="https://doi.org/10.32614/CRAN.package.devtools">Wickham et al, 2025</a></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="data-loading-and-sub-setting" class="section level2" number="3.4">
 <h2><span class="header-section-number">3.4</span> Data loading and sub-setting</h2>
@@ -1664,17 +1761,17 @@ font-style: italic;
 <li><code>PAR_POST_PRE_SUB_ProS_seuratobj</code> (Hippocampal-subicular)</li>
 </ol>
 </div>
-<div id="exploritory-data-analysis" class="section level2" number="3.5">
-<h2><span class="header-section-number">3.5</span> Exploritory Data Analysis</h2>
+<div id="exploratory-data-analysis" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Exploratory Data Analysis</h2>
 <p><a href="https://ggplot2.tidyverse.org/">ggplot2</a> was utilized for visualization. Cell sub_class, roi, sex, age, and Doublet_score, one of the quality control score utilized by <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al (2025)</a>, proposed by <a href="https://doi.org/10.1016/j.cels.2019.03.003">McGinnis (2019)</a>, were plotted and examined.</p>
 </div>
 <div id="normalization-and-quality-control" class="section level2" number="3.6">
 <h2><span class="header-section-number">3.6</span> Normalization and quality control</h2>
-<p>The normalization and quality control step were conduced by <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al (2025)</a>. The raw counts were log-transformed and z-score normalized. Cells which number of gene detected &lt; 1000 OR QC score &lt; 50 OR Doublet score &gt; 0.3 were removed.</p>
+<p>The normalization and quality control step were conducted by <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al (2025)</a>. The raw counts were log-transformed and z-score normalized. Cells which number of gene detected &lt; 1000 OR QC score &lt; 50 OR Doublet score &gt; 0.3 were removed.</p>
 </div>
 <div id="clustering" class="section level2" number="3.7">
 <h2><span class="header-section-number">3.7</span> Clustering</h2>
-<p>Mention the poor-documented <code>bigcat</code> pacakge, note alternation usage of <code>hicat</code> pacakge</p>
+<p>Mention the poor-documented <code>bigcat</code> package, note alternative usage of <code>hicat</code> package</p>
 </div>
 <div id="differential-gene-expression-analysis" class="section level2" number="3.8">
 <h2><span class="header-section-number">3.8</span> Differential Gene Expression Analysis</h2>
@@ -1684,8 +1781,8 @@ font-style: italic;
 <h2><span class="header-section-number">3.9</span> Synteny exploration</h2>
 <p>Manually browse top DEGs on UCSC genome browser (mm10)</p>
 </div>
-<div id="reciprical-blast" class="section level2" number="3.10">
-<h2><span class="header-section-number">3.10</span> Reciprical BLAST</h2>
+<div id="reciprocal-blast" class="section level2" number="3.10">
+<h2><span class="header-section-number">3.10</span> Reciprocal BLAST</h2>
 <p>Reciprocally BLAST X and Y GM47283 homologous, and against human genome</p>
 </div>
 <div id="read-assembly-algorithm-assessment" class="section level2" number="3.11">
@@ -1699,7 +1796,7 @@ font-style: italic;
 </div>
 <div id="discussion" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Discussion</h1>
-<p>…</p>
+<p><a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al (2025)</a> conducted clustering using unpublished, in-house developed R package <code>scrattch.bigcat (v.0.0.1)</code> (<a href="https://github.com/AllenInstitute/scrattch.bigcat" class="uri">https://github.com/AllenInstitute/scrattch.bigcat</a>), which is a sub-package of <code>scrattch</code> package (<a href="https://alleninstitute.github.io/scrattch/" class="uri">https://alleninstitute.github.io/scrattch/</a>) optimized for extremely large single cell dataset by support parallel computing and in-disk data access. However, because <a href="https://github.com/AllenInstitute/scrattch.bigcat">scrattch.bigcat (v.0.0.1)</a> wasn’t formally released, it was poorly documented and failed to function on local lab machine after weeks’ attempt to rescue. Thus, an alternative sub-package of <a href="https://alleninstitute.github.io/scrattch/">scrattch</a>, <code>scrattch.hicat</code> (<a href="https://github.com/AllenInstitute/scrattch.hicat" class="uri">https://github.com/AllenInstitute/scrattch.hicat</a>), was utilized. <a href="https://github.com/AllenInstitute/scrattch.hicat">scrattch.hicat</a> doesn’t support parallel computing and in-disk data access, but provide better documentation.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>

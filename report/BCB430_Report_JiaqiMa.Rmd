@@ -54,7 +54,7 @@ To be done in report
 ## Data Source
 
 -    Single cell RNA-seq (scRNA-seq)
--    Origional paper: [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8)
+-    Original paper: [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8)
 -    Deposited in [Neuroscience Multi-omic Data Archive (NeMO)](https://assets.nemoarchive.org/dat-61kfys3)
 -    Download url: https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar
 -    Note: Only Hippocampal formation (HPF) data were subjected to this analysis
@@ -66,15 +66,29 @@ The 6 major regions were:
 1. Isocortex
 2. Hippocampal formation (HPF)
 3. Hypothalamus (HY)
-4. Cerebral nulei (CNU)
+4. Cerebral nulcei (CNU)
 5. Midbrain
 6. Hindbrain
 
 ## Packages Usage
 
-[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) conduced clustering using unpublished, in-house developed R package `scrattch.bigcat (v.0.0.1)` (https://github.com/AllenInstitute/scrattch.bigcat), which is a sub-package of `scrattch` package (https://alleninstitute.github.io/scrattch/) optimized for extremely large single cell dataset by support parallel computing and in-disk data access. However, because [scrattch.bigcat (v.0.0.1)](https://github.com/AllenInstitute/scrattch.bigcat) wasn't formally released, it was poorly documented and failed to function on local lab machine after weeks' attempt to rescue. Thus, an alternative sub-package of [scrattch](https://alleninstitute.github.io/scrattch/), `scrattch.hicat` (https://github.com/AllenInstitute/scrattch.hicat), was utilized. [scrattch.hicat](https://github.com/AllenInstitute/scrattch.hicat) doesn't support parallel computing and in-disk data access, but provide better documentation.
-
 [Seurat](https://satijalab.org/seurat/) ([Hao et al, 2023](https://satijalab.org/seurat/)) was utilized as basic frame work, to take advantage of it mature pipeline.
+
+The following table categorized R packages utilization by biological analysis, data visualization, and pipeline utilities within this project based on their primary functionality.
+
+| Category | Package | Version | Description | Reference |
+| :--- | :--- | :--- | :--- | :--- |
+| Analytical | `Seurat` | *5.4.0* | Basic framework for data management, Differential Gene Expression (DEG) analysis, and Umap visualization | [Hao et al, 2023](https://satijalab.org/seurat/) |
+| Analytical | `scrattch.bigcat` | *0.0.1* | Initially selected for clustering, the same package utlized by [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8). **Note:** Utilization was unsuccessful due to limited documentation and local compatibility issues. | Unpublished; [github](https://github.com/AllenInstitute/scrattch.bigcat) |
+| Analytical | `scrattch.hicat` | *1.0.0* | Alternative clustering package utilized; selected for superior documentation. | Unpublished; [github](https://github.com/AllenInstitute/scrattch.hicat) |
+| Analytical | `Presto` | *1.0.0* | Fast implimentation of Wilcoxon Rank Sum test | [Nathan & Raychaudhuri, 2019](https://doi.org/10.1101/653253) |
+| Visualization | `ggplot2` | *4.0.1* | Exploratory Data Analysis (EDA); visualization of cell subclass, ROI, sex, age, and doublet scores. | [Wickham, 2016](https://ggplot2.tidyverse.org) |
+| Visualization | `patchwork` | *1.3.2* | Plots Composer | [Pedersen, 2025](https://patchwork.data-imaginist.com) |
+| Utilities | `annadataR` | *[To be find on lab machine]* | Data loading; converting Python-native `.h5ad` formats into R-compatible Seurat objects. | [Deconinck et al, 2026](https://doi.org/10.1101/2025.08.18.669052) |
+| Utilities | `bookdown` | *0.46* | HTML report formatting and generation. | [Xie, 2016](https://bookdown.org/yihui/bookdown) |
+| Utilities | `knitr` | *1.51* | R Markdown environment configuration and dynamic table rendering. | [Xie, 2014](https://yihui.org/knitr/) |
+| Utilities | `Matrix` | *1.7-3* | Sparse and Dense Matrix data manipulation  | [Bates et al, 2025](https://doi.org/10.32614/CRAN.package.Matrix) |
+| Utilities | `devtools` | *2.4.6* | Grant developer mode for R packages, tunning `scrattch.bigcat` and `scrattch.hicat`  | [Wickham et al, 2025](https://doi.org/10.32614/CRAN.package.devtools) |
 
 ## Data loading and sub-setting
 
@@ -94,18 +108,18 @@ The downloaded data is in `.h5ad`, popular single-cell transctiptome format in p
 12. `HIP_CA_seuratobj` (Hippocampus, Cornu Ammonis)
 13. `PAR_POST_PRE_SUB_ProS_seuratobj` (Hippocampal-subicular)
 
-## Exploritory Data Analysis
+## Exploratory Data Analysis
 
 [ggplot2](https://ggplot2.tidyverse.org/) was utilized for visualization. Cell sub_class, roi, sex, age, and Doublet_score, one of the quality control score utilized by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8), proposed by [McGinnis (2019)](https://doi.org/10.1016/j.cels.2019.03.003), were plotted and examined.
 
 
 ## Normalization and quality control
 
-The normalization and quality control step were conduced by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8). The raw counts were log-transformed and z-score normalized. Cells which number of gene detected < 1000 OR QC score < 50 OR Doublet score > 0.3 were removed.
+The normalization and quality control step were conducted by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8). The raw counts were log-transformed and z-score normalized. Cells which number of gene detected < 1000 OR QC score < 50 OR Doublet score > 0.3 were removed.
 
 ## Clustering
 
-Mention the poor-documented `bigcat` pacakge, note alternation usage of `hicat` pacakge
+Mention the poor-documented `bigcat` package, note alternative usage of `hicat` package
 
 ## Differential Gene Expression Analysis
 
@@ -115,7 +129,7 @@ Use `Seurat` to find DEGs along three aspect, sex, roi, and age. Include script 
 
 Manually browse top DEGs on UCSC genome browser (mm10)
 
-## Reciprical BLAST
+## Reciprocal BLAST
 
 Reciprocally BLAST X and Y GM47283 homologous, and against human genome
 
@@ -129,6 +143,6 @@ Cite 10x genomics, cell ranger, STAR
 
 # Discussion
 
-...
+[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) conducted clustering using unpublished, in-house developed R package `scrattch.bigcat (v.0.0.1)` (https://github.com/AllenInstitute/scrattch.bigcat), which is a sub-package of `scrattch` package (https://alleninstitute.github.io/scrattch/) optimized for extremely large single cell dataset by support parallel computing and in-disk data access. However, because [scrattch.bigcat (v.0.0.1)](https://github.com/AllenInstitute/scrattch.bigcat) wasn't formally released, it was poorly documented and failed to function on local lab machine after weeks' attempt to rescue. Thus, an alternative sub-package of [scrattch](https://alleninstitute.github.io/scrattch/), `scrattch.hicat` (https://github.com/AllenInstitute/scrattch.hicat), was utilized. [scrattch.hicat](https://github.com/AllenInstitute/scrattch.hicat) doesn't support parallel computing and in-disk data access, but provide better documentation.
 
 # References {#references}
