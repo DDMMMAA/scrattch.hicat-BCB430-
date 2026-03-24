@@ -50,7 +50,7 @@ knitr::opts_chunk$set(
 
 ## Animal Model
 
-To be done in report
+//To be done in report
 
 ## Data Source
 
@@ -60,7 +60,7 @@ To be done in report
 -    Download url: https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar
 -    Note: Only Hippocampal formation (HPF) data were subjected to this analysis
 
-[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) sequenced brain sample collected from 44 aged mice (20 female, 24 male) and 64 young adult mice (31 female, 33 male) using Illumina NovaSeq6000 sequencing system ([Modi et al, 2021](https://doi-org.myaccess.library.utoronto.ca/10.1007/978-1-0716-1099-2_2)) and 10X Genomics CellRanger pipeline (v.6.0.0) to assemble sequenced reads to `mm10/gencode.vM23` reference genome ([Frankish et al, 2019](https://doi-org.myaccess.library.utoronto.ca/10.1093/nar/gky955)). The raw sequence data contains `2,777,165` cells categorized in 6 major regions, 16 broad regions.
+[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) sequenced brain sample collected from 44 aged mice (20 female, 24 male) and 64 young adult mice (31 female, 33 male) using Illumina NovaSeq6000 sequencing system ([Modi et al, 2021](https://doi-org.myaccess.library.utoronto.ca/10.1007/978-1-0716-1099-2_2)) and 10X Genomics CellRanger pipeline (v.6.0.0) to map sequenced reads to `mm10/gencode.vM23` reference genome ([Frankish et al, 2019](https://doi-org.myaccess.library.utoronto.ca/10.1093/nar/gky955)). The raw sequence data contains `2,777,165` cells categorized in 6 major regions, 16 broad regions.
 
 The 6 major regions were:
 
@@ -93,11 +93,11 @@ The following table categorized R packages utilization by biological analysis, d
 
 **Table 1:** Summary of R packages utilized for data processing, analysis, and document generation. Packages are categorized by their primary functional role within the bioinformatics pipeline (Analytical, Visualization, or Utilities). Note that the original clustering package, scrattch.bigcat, was substituted with scrattch.hicat due to local environment incompatibilities and insufficient documentation.
 
-## Normalization and quality control
+## Normalization and Quality Control
 
 The normalization and quality control step were conducted by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8). The raw counts were log-transformed and z-score normalized. Cells which number of gene detected < 1000 OR QC score < 50 OR Doublet score > 0.3 were removed.
 
-## Data loading and sub-setting
+## Data loading and Sub-setting
 
 ![**Figure 2:** Schematic of dissected brain regions; The red box indicates subsetted regions. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
 )](figure/allen_region.png)
@@ -151,7 +151,7 @@ To control for inherent differences in baseline transcriptional complexity when 
 
 Finally, the top 15 DEGs identified in each comparison (ranked by ascending adjusted p value) were extracted for manual investigation.
 
-## Synteny exploration
+## Synteny Exploration
 
 To investigate the genomic location and syntenic relationships of the identified candidate DEGs, spatial coordinates were visually inspected utilizing the [UCSC Genome Browser](https://pubmed.ncbi.nlm.nih.gov/41251146/). The *Mus musculus* reference genome `GRCm38/mm10`, provided by the [Genome Reference Consortium](https://www.ncbi.nlm.nih.gov/grc), was selected to align with [Jin et al. (2025)](https://doi.org/10.1038/s41586-024-08350-8). Five specific genes of interest (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) were manually queried using the UCSC Genome Browser's website search tool to evaluate their synteny.
 
@@ -161,15 +161,51 @@ To assess the sequence homology between the X and Y alleles of *Gm47283*, an int
 
 To determine whether the murine *Gm47283* gene possesses conserved evolutionary counterparts within the human genome, an inter-species homology search was subsequently conducted. All sequence inputs and algorithm parameters were kept identical to the intra-species search, with the taxonomic search space strictly filtered to include only *Homo sapiens* (taxid:9606). The resulting alignments were manually evaluated to identify potential human homologs.
 
-## Read Assembly algorithm assessment
+## Read Mapping Algorithm Assessment
 
-To evaluate the potential for algorithmic artifacts contributing to the potential *Gm47283* misassembly, the foundational read mapping pipeline utilized by [Jin et al, (2025)](https://doi.org/10.1038/s41586-024-08350-8) was critically assessed. According to the original study's methodology, read alignment was executed using the 10x Genomics [Cell Ranger pipeline (v.6.0.0)](https://www.10xgenomics.com/support/cn/software/cell-ranger/latest/algorithms-overview/cr-gex-algorithm). Cell Ranger further employed the Spliced Transcripts Alignment to a Reference (STAR) algorithm ([Dobin et al, 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104886)) to map sequenced reads to the reference genome. 
+To evaluate the potential for algorithmic artifacts contributing to the potential *Gm47283* mismapping, the foundational read mapping pipeline utilized by [Jin et al, (2025)](https://doi.org/10.1038/s41586-024-08350-8) was critically assessed. According to the original study's methodology, read mapping was executed using the 10x Genomics [Cell Ranger pipeline (v.6.0.0)](https://www.10xgenomics.com/support/cn/software/cell-ranger/latest/algorithms-overview/cr-gex-algorithm). Cell Ranger further employed the Spliced Transcripts Alignment to a Reference (STAR) algorithm ([Dobin et al, 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104886)) to map sequenced reads to the reference genome. 
 
-A review of the STAR algorithmic architecture indicates that it employs a local linear scoring model to evaluate alignments—penalizing mismatches, insertions, and deletions proportionately. Furthermore, while the STAR algorithm natively permits user-defined handling of multimapped reads (reads that align to multiple genomic loci with equal scoring confidence), official 10x Genomics [Q&A documentation](https://kb.10xgenomics.com/s/article/4409878456077-How-to-extract-multi-mapped-reads-from-Cell-Ranger-BAM-files) confirms that the standard Cell Ranger pipeline strictly ignores all multimapped reads during quality control phase. This algorithmic parameter was identified as a potential vulnerability when evaluating highly homologous loci, as true reads originating from the *Gm47283* X and Y alleles would likely be discarded.
+A review of the STAR algorithmic architecture indicates that it employs a local linear scoring model to evaluate alignments—penalizing mismatches, insertions, and deletions proportionately. Furthermore, while the STAR algorithm natively permits user-defined handling of multimapped reads (reads that mapped to multiple genomic loci with equal scoring confidence), official 10x Genomics [Q&A documentation](https://kb.10xgenomics.com/s/article/4409878456077-How-to-extract-multi-mapped-reads-from-Cell-Ranger-BAM-files) confirms that the standard Cell Ranger pipeline strictly ignores all multimapped reads during quality control phase. This algorithmic parameter was identified as a potential vulnerability when evaluating highly homologous loci, as true reads originating from the *Gm47283* X and Y alleles would likely be discarded.
 
 # Result
 
-![**Figure 4:** Proposed mechanism of Gm47283 reads misassembly. The schematic illustrates a hypothetical algorithmic error during the reads assembly phase of Gm47283. The true genomic locus of the Gm47283 X-allele (top) consists of defined exonic regions (boxes) separated by intronic sequences (lines). Transcription and splicing produce a mature isoform devoid of introns (middle). The hypothesis proposes that this processed, continuous isoform was assembled to continuous Y-allele (bottom) under linear assumption of assembly algorithm, resulting in a misassembly. (created in https://BioRender.com)](figure/Hypothetical_misassembly.png)
+...
+
+## Data loading and sub-setting
+
+//To be done in report
+
+## Exploratpry Data Analysis
+
+![**Figure 4:**](figure/cell_demographics_piecharts.png)
+
+//TODO add doublet score distribution plot
+
+## Clustering
+
+...
+
+## Differential Gene Expression Analysis
+
+...
+
+//TODO add Kdm5d, Eif2s3y, Uty, Ddx3y violin plot
+
+## Synteny exploration
+
+...
+
+//TODO add a figure to demonstrate pseudoautosomal region of sex chromosomes
+
+## Reciprocal BLAST
+
+...
+
+## Read Mapping Algorithm Assessment
+
+...
+
+![**Figure 5:** Proposed mechanism of Gm47283 reads mismapping. The schematic illustrates a hypothetical algorithmic error during the reads mapping phase of Gm47283. The true genomic locus of the Gm47283 X-allele (top) consists of defined exonic regions (boxes) separated by intronic sequences (lines). Transcription and splicing produce a mature isoform devoid of introns (middle). The hypothesis proposes that this processed, continuous isoform was mapped to continuous Y-allele (bottom) under linear assumption of mapping algorithm, resulting in a mismapping. (created in https://BioRender.com)](figure/hypothetical_mismapping.png)
 
 # Discussion
 
