@@ -123,7 +123,7 @@ The downloaded data is in `.h5ad`, popular single-cell transcriptome format in P
 
 ## Exploratory Data Analysis
 
-[ggplot2](https://ggplot2.tidyverse.org/) was utilized for visualization. Cell sub_class, region of interest (roi), sex, age, and Doublet_score, one of the quality control score utilized by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8), proposed by [McGinnis (2019)](https://doi.org/10.1016/j.cels.2019.03.003), were plotted and examined.
+[ggplot2](https://ggplot2.tidyverse.org/) was utilized for visualization. Cell sub_class, region of interest (roi), sex, age, number of detected gene, number of gene count, mitochondrial percentage and Doublet_score, one of the quality control score utilized by [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8), proposed by [McGinnis (2019)](https://doi.org/10.1016/j.cels.2019.03.003), were plotted and examined.
 
 ## Clustering
 
@@ -173,27 +173,36 @@ To determine whether the murine *Gm47283* gene possesses conserved evolutionary 
 
 ![**Figure 4:**](figure/cell_demographics_piecharts.png)
 
-//TODO add doublet score distribution plot
+![**Figure 5:**](.png)
+//TODO add  QC metrics (nFeature_RNA, nCount_RNA, percent.mt, doublet_score) plot
 
 ## Clustering
 
-...
+![**Figure 6:**](figure/Umaps.png)
 
 ## Differential Gene Expression Analysis
 
-...
+![**Figure 7:**](figure/Global_DE_Counts.png)
+
+![**Figure 8:**](figure/DE_Counts_3Way_Comparison.png)
+
+![**Figure 9:**](figure/Gm47283 expression level whole glia.png)
 
 //TODO add Kdm5d, Eif2s3y, Uty, Ddx3y violin plot
 
 ## Synteny exploration
 
-...
+![**Figure 10:**](figure/chrY_front.png)
 
-//TODO add a figure to demonstrate pseudoautosomal region of sex chromosomes
+![**Figure 11:**](figure/chrY_back.png)
+
+![**Figure 12:**](figure/pseudoautosomal_region.jpg)
 
 ## Reciprocal BLAST
 
-...
+![**Figure 13:**](figure/reciprocal_BLAST.png)
+
+![**Figure 14:**](figure/mice_to_human_BLAST.png)
 
 # Discussion
 
