@@ -88,7 +88,7 @@ The following table categorized R packages utilization by biological analysis, d
 | Analytical | `Presto` | *1.0.0* | Fast implementation of Wilcoxon Rank Sum test | [Nathan & Raychaudhuri, 2019](https://doi.org/10.1101/653253) |
 | Visualization | `ggplot2` | *4.0.1* | Exploratory Data Analysis (EDA); visualization of cell subclass, ROI, sex, age, and doublet scores. | [Wickham, 2016](https://ggplot2.tidyverse.org) |
 | Visualization | `patchwork` | *1.3.2* | Plots Composer | [Pedersen, 2025](https://patchwork.data-imaginist.com) |
-| Utilities | `annadataR` | *[To be find on lab machine]* | Data loading; converting Python-native `.h5ad` formats into R-compatible Seurat objects. | [Deconinck et al, 2026](https://doi.org/10.1101/2025.08.18.669052) |
+| Utilities | `annadataR` | *1.0.0* | Data loading; converting Python-native `.h5ad` formats into R-compatible Seurat objects. | [Deconinck et al, 2026](https://doi.org/10.1101/2025.08.18.669052) |
 | Utilities | `bookdown` | *0.46* | HTML report formatting and generation. | [Xie, 2016](https://bookdown.org/yihui/bookdown) |
 | Utilities | `knitr` | *1.51* | R Markdown environment configuration and dynamic table rendering. | [Xie, 2014](https://yihui.org/knitr/) |
 | Utilities | `Matrix` | *1.7-3* | Sparse and Dense Matrix data manipulation  | [Bates et al, 2025](https://doi.org/10.32614/CRAN.package.Matrix) |
