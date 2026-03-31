@@ -176,18 +176,24 @@ To determine whether the murine *Gm47283* gene possesses conserved evolutionary 
 
 ## Data loading and sub-setting
 
-//To be done in report
+The Post-QC normalized scRNA-seq data fetched from [Neuroscience Multi-omic Data Archive (NeMO)](https://assets.nemoarchive.org/dat-61kfys3) contains `1,999,976` cells. After sub-setting, there were `121,282` cells (~6.06%) remained to be glia in HPF.
 
 ## Exploratory Data Analysis
 
-![**Figure 5:**](figure/cell_demographics_piecharts.png)
+![**Figure 5:** Cell demographic distribution; The top left panel is the subclass distribution; The top right panel is the sub-HPF region (denote as region of interest, roi) distribution; The bottom left panel is the sex group distribution; The bottom right is the age group distribution ](figure/cell_demographics_piecharts.png)
+
+There were 16 subclasses in the dataset, dominated by `Astro-TE NN` (43.7%). There were 4 sub-HPF region (denote as region of interest, roi in figure 5) revealed from dataset. However, [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8) only document three roi as shown in figure 3, `HIP` wasn't documented. Judged by the same prefix of `HIP` and `HIP - CA` It was supposed to be part of `HIP - CA`. 
+
+The sex was slightly biased toward male group. The age is biased toward aged group.
 
 ![**Figure 6:**](.png)
 //TODO add  QC metrics (nFeature_RNA, nCount_RNA, percent.mt, doublet_score) plot
 
 ## Clustering
 
-![**Figure 7:**](figure/Umaps.png)
+![**Figure 7:** UMAP visualization grouped by annotation and metadata; The top row represent clustering, subclass, and class from left to right; The bottom row represent age, sex, and roi from left to right; The red circle on the left most two panel on top row indicate small clusters identified from clustering but missed in subclass](figure/Umaps.png)
+
+The clustering result was similar to subclass annotation by a glance. However, there were 4 small clusters (20, 24, 25, 26), locate at the left tip of OPC cluster close to oligodendrocyte, identified from clustering but not present in subclass annotation. Consider oligodendrocyte is differentiated from OPC ([Tiane et al, 2019](https://doi.org/10.3390/cells8101236)), those 4 small clusters (20, 24, 25, 26) might indicate intermediate differentiating state from OPC to oligodendrocyte.
 
 ## Differential Gene Expression Analysis
 
