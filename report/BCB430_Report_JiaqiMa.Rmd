@@ -48,6 +48,8 @@ However, the execution of this standard biological pipeline yielded a severe ano
 
 ![**Figure 1:** Overview of scRNA-seq data analysis workflow ([He et al, 2022](https://doi.org/10.52601/bpr.2022.210041))](figure/scRNA_seq_pipeline.jpg)
 
+<br>
+
 # Objective
 
 * **Biological Variance:** What are the sex- and age-related transcriptomic signatures defining the non-neuronal (glial) populations' identity within the Hippocampal formation (HPF)?
@@ -56,6 +58,8 @@ However, the execution of this standard biological pipeline yielded a severe ano
 # Method
 
 ![**Figure 2:** BCB430 method roadmap; Number of cells retained in first two steps are indicated in red (Created in https://BioRender.com)](figure/bcb430_roadmap.png)
+
+<br>
 
 ## Animal Model
 
@@ -111,8 +115,12 @@ The normalization and quality control step were conducted by [Jin et al (2025)](
 ![**Figure 3:** Schematic of dissected brain regions; The red box indicates subsetted regions. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
 )](figure/allen_region.png)
 
+<br>
+
 ![**Figure 4:** Schematic of hierarchical "Cell type" annotation; The red box indicates subsetted classes. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
 )](figure/allen_annotation.png)
+
+<br>
 
 The downloaded data is in `.h5ad`, popular single-cell transcriptome format in Python ecosystem. [annadataR](https://doi.org/10.1101/2025.08.18.669052) was utilized to read `.h5ad` file into R and converted to `Seurat object`, basic functional unit in [Seurat](https://satijalab.org/seurat/) pipeline. Then subset the whole HPF dataset by neuro/glia, age, sex, sub-region (roi) to the following subsets for the sake of data management.
 
@@ -182,6 +190,8 @@ The Post-QC normalized scRNA-seq data fetched from [Neuroscience Multi-omic Data
 
 ![**Figure 5:** Cell demographic distribution; The top left panel is the subclass distribution; The top right panel is the sub-HPF region (denote as region of interest, roi) distribution; The bottom left panel is the sex group distribution; The bottom right is the age group distribution ](figure/cell_demographics_piecharts.png)
 
+<br>
+
 There were 16 subclasses in the dataset, dominated by `Astro-TE NN` (43.7%). There were 4 sub-HPF region (denote as region of interest, roi in figure 5) revealed from dataset. However, [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8) only document three roi as shown in figure 3, `HIP` wasn't documented. Judged by the same prefix of `HIP` and `HIP - CA` It was supposed to be part of `HIP - CA`. 
 
 The sex was slightly biased toward male group. The age is biased toward aged group.
@@ -189,35 +199,58 @@ The sex was slightly biased toward male group. The age is biased toward aged gro
 ![**Figure 6:**](.png)
 //TODO add  QC metrics (nFeature_RNA, nCount_RNA, percent.mt, doublet_score) plot
 
+<br>
+
 ## Clustering
 
 ![**Figure 7:** UMAP visualization grouped by annotation and metadata; The top row represent clustering, subclass, and class from left to right; The bottom row represent age, sex, and roi from left to right; The red circle on the left most two panel on top row indicate small clusters identified from clustering but missed in subclass](figure/Umaps.png)
 
+<br>
+
 The clustering result was similar to subclass annotation by a glance. However, there were 4 small clusters (20, 24, 25, 26), locate at the left tip of OPC cluster close to oligodendrocyte, identified from clustering but not present in subclass annotation. Consider oligodendrocyte is differentiated from OPC ([Tiane et al, 2019](https://doi.org/10.3390/cells8101236)), those 4 small clusters (20, 24, 25, 26) might indicate intermediate differentiating state from OPC to oligodendrocyte.
+
+Visual assessment of the UMAP projections indicates that among the three metadata variables, roi drives the most pronounced transcriptomic heterogeneity, particularly within astrocytic populations. Age serves as the secondary driver of variance, predominantly segregating astrocyte and oligodendrocyte clusters, whereas biological sex exerts the subtlest visual influence.
 
 ## Differential Gene Expression Analysis
 
-![**Figure 8:**](figure/Global_DE_Counts.png)
+![**Figure 8:** Global differentially expressed gene count; Y-axis is the number of significantly differentilly expressed gene; X-axis are groups separated by age, roi, and sex](figure/Global_DE_Counts.png)
 
-![**Figure 9:**](figure/DE_Counts_3Way_Comparison.png)
+<br>
+
+The number of globally differentially expressed gene aligned with previous UMAP visualization grouped by metadata, which both indicate roi is the strongest contributor to cell heterogeneity followed by age and sex.
+
+![**Figure 9:** Raw and normalized local differentially expressed gene count; Y-axis is each subclass grouped by three categories, 14 out of 16 subclass contain differentially expressed gene. Astroependymal and tanycyte doesn't contain differentially expressed gene because of insufficient number of cell; X-axis is the number of significantly differentially expressed gene; (A) Raw counts; (B) Normalizaed by averages number of genes detected per cell; (C) Normalized by the total number of genes detected per subclass. ](figure/DE_Counts_3Way_Comparison.png)
+
+<br>
 
 ![**Figure 10:**](figure/Gm47283 expression level whole glia.png)
-
 //TODO add Kdm5d, Eif2s3y, Uty, Ddx3y violin plot
+
+<br>
 
 ## Synteny exploration
 
 ![**Figure 11:**](figure/chrY_front.png)
 
+<br>
+
 ![**Figure 12:**](figure/chrY_back.png)
 
+<br>
+
 ![**Figure 13:**](figure/pseudoautosomal_region.png)
+
+<br>
 
 ## Reciprocal BLAST
 
 ![**Figure 14:**](figure/reciprocal_BLAST.png)
 
+<br>
+
 ![**Figure 15:**](figure/mice_to_human_BLAST.png)
+
+<br>
 
 # Discussion
 
@@ -231,5 +264,7 @@ To evaluate the potential for algorithmic artifacts contributing to the potentia
 A review of the STAR algorithmic architecture indicates that it employs a local linear scoring model to evaluate alignments—penalizing mismatches, insertions, and deletions proportionately. Furthermore, while the STAR algorithm natively permits user-defined handling of multimapped reads (reads that mapped to multiple genomic loci with equal scoring confidence), official 10x Genomics [Q&A documentation](https://kb.10xgenomics.com/s/article/4409878456077-How-to-extract-multi-mapped-reads-from-Cell-Ranger-BAM-files) confirms that the standard Cell Ranger pipeline strictly ignores all multimapped reads during quality control phase. This algorithmic parameter was identified as a potential vulnerability when evaluating highly homologous loci, as true reads originating from the *Gm47283* X and Y alleles would likely be discarded.
 
 ![**Figure 16:** Proposed mechanism of Gm47283 reads mismapping. The schematic illustrates a hypothetical algorithmic error during the reads mapping phase of *Gm47283*. The true genomic locus of the Gm47283 X-allele (top) consists of defined exonic regions (boxes) separated by intronic sequences (lines). Transcription and splicing produce a mature isoform devoid of introns (middle). The hypothesis proposes that this processed, continuous isoform was mapped to continuous Y-allele (bottom) under linear assumption of mapping algorithm, resulting in a mismapping. (created in https://BioRender.com)](figure/hypothetical_mismapping.png)
+
+<br>
 
 # References {#references}
