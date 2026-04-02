@@ -255,18 +255,21 @@ Existing literature indicates that the telomeric ends of the X and Y chromosomes
 
 ## Reciprocal BLAST
 
-![**Figure 14:**](figure/reciprocal_BLAST.png)
+![**Figure 14:** Gm47283 Reciprocal BLAST result; The left panel is X-allele query; The right panel is Y-allel query; X and Y chromosome hit in both query were checked and visualized using graphical representation tool in BLAST website](figure/reciprocal_BLAST.png)
 
 <br>
 
-![**Figure 15:**](figure/mice_to_human_BLAST.png)
+The *Gm47283* X-allele query yielded two Y-chromosome hits within the top three hits, demonstrating an E-value of `0`, `98–99%` sequence identity, and `100%` query coverage. Conversely, the Y-allele query yielded three X-chromosome hits within the top 18 hits, also demonstrating an E-value of `0` and `97–98%` sequence identity. Among these X-chromosome hits, one exhibited `61%` query coverage, while the remaining two exhibited `~12%` query coverage. In both directions, the mapped sequences were nearly identical. The difference in query coverage indicates that the Y-allele is relatively large compared to the X-allele. This size difference is verified by the graphical visualization, which reveals multiple truncation when map Y-allele to X-allele.
+
+![**Figure 15:** Gm47283 interspecies BLAST result; The left panel is X-allele query; The right panel is Y-allel query; Human chromosome 21 hits both query were checked and visualized using graphical representation tool in BLAST website](figure/mice_to_human_BLAST.png)
 
 <br>
+
+The interspecies BLAST analysis revealed sequences similarity to *Gm47283* located on human chromosome 21. The Y-allele query yielded five human chromosome 21 hits within the top five hits, demonstrating an E-value of `0`, `93–97%` sequence identity, and `12~20%` query coverage. The X-allele query yielded ten human chromosome 21 hits within the top ten hits, demonstrating an E-values ranging from `1e-43` to `1e-61`, `81–90%` sequence identity, and `7~12%` query coverage. The graphical representation indicates extensive fragmentation and truncation in both queries. The combination of high sequence identity, low query coverage, and extensive truncation implies the existence of a human paralog of *Gm47283* residing on chromosome 21.
 
 # Discussion
 
 [Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) conducted clustering using unpublished, in-house developed R package `scrattch.bigcat (v.0.0.1)` (https://github.com/AllenInstitute/scrattch.bigcat), which is a sub-package of `scrattch` package (https://alleninstitute.github.io/scrattch/) optimized for extremely large single-cell datasets by supporting parallel computing and in-disk data access. However, because [scrattch.bigcat (v.0.0.1)](https://github.com/AllenInstitute/scrattch.bigcat) wasn't formally released, it was poorly documented and failed to execute reliably within the local computational environment despite extensive troubleshooting. Thus, an alternative sub-package of [scrattch](https://alleninstitute.github.io/scrattch/), `scrattch.hicat` (https://github.com/AllenInstitute/scrattch.hicat), was utilized. [scrattch.hicat](https://github.com/AllenInstitute/scrattch.hicat) doesn't support parallel computing and in-disk data access, but provides better documentation.
-
 
 ## Read Mapping Algorithm Assessment
 
