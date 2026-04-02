@@ -174,8 +174,6 @@ To determine whether the murine *Gm47283* gene possesses conserved evolutionary 
 
 # Result
 
-...
-
 ## Data loading and sub-setting
 
 The Post-QC normalized scRNA-seq data fetched from [Neuroscience Multi-omic Data Archive (NeMO)](https://assets.nemoarchive.org/dat-61kfys3) contains `1,999,976` cells. After sub-setting, there were `121,282` cells (~6.06%) remained to be glia in HPF.
