@@ -213,34 +213,45 @@ Visual assessment of the UMAP projections indicates that among the three metadat
 
 ## Differential Gene Expression Analysis
 
-![**Figure 8:** Global differentially expressed gene count; Y-axis is the number of significantly differentilly expressed gene; X-axis are groups separated by age, roi, and sex](figure/Global_DE_Counts.png)
+![**Figure 8:** Global differentially expressed gene (DEG) count; Y-axis is the number of significantly differentilly expressed gene; X-axis are groups separated by age, roi, and sex](figure/Global_DE_Counts.png)
 
 <br>
 
-The number of globally differentially expressed gene aligned with previous UMAP visualization grouped by metadata, which both indicate roi is the strongest contributor to cell heterogeneity followed by age and sex.
+The number of globally differentially expressed gene (DEG) aligned with previous UMAP visualization grouped by metadata, which both indicate roi is the strongest contributor to cell heterogeneity followed by age and sex.
 
-![**Figure 9:** Raw and normalized local differentially expressed gene count; Y-axis is each subclass grouped by three categories, 14 out of 16 subclass contain differentially expressed gene. Astroependymal and tanycyte doesn't contain differentially expressed gene because of insufficient number of cell; X-axis is the number of significantly differentially expressed gene; (A) Raw counts; (B) Normalizaed by averages number of genes detected per cell; (C) Normalized by the total number of genes detected per subclass. ](figure/DE_Counts_3Way_Comparison.png)
+![**Figure 9:** Raw and normalized local DEG count; Y-axis is each subclass grouped by three categories, 14 out of 16 subclass contain differentially expressed gene. Astroependymal and tanycyte doesn't contain differentially expressed gene because of insufficient number of cell; X-axis is the number of significantly differentially expressed gene; (A) Raw counts; (B) Normalizaed by averages number of genes detected per cell; (C) Normalized by the total number of genes detected per subclass. ](figure/DE_Counts_3Way_Comparison.png)
 
 <br>
 
-![**Figure 10:**](figure/Gm47283 expression level whole glia.png)
+Compare raw DEG count with normalized count, the overall pattern preserved. Compare different subclasses within a raw/normalized count panel, astrocyte revealed to be the most heterogeneous subclass, followed by oligodendrocyte. Compare different categories (sex, age, roi) within a subclass, the result aligned with UMAP visualization and global result which all indicate roi is the strongest contributor to cell heterogeneity followed by age and sex. Only Ependymal subclass diverge from the roi, age, sex pattern of contribution, but weakly and and based on an insufficient number of tested cells.
+
+![**Figure 10:** Expression level of Gm47283 across 16 glial subclasses between sex, upregulated in female in 10 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subcalss (***: adjusted p < 0.001; ns: not significant)](figure/Gm47283 expression level whole glia.png)
+
+<br>
+
+Among the top 15 DEGs identified in each subclass during sex comparisons, *Gm47283* was significantly upregulated in the female group across 10 of the 16 subclasses. Although the magnitude of the fold change was modest, the statistical significance of this differential expression was extremely high. Interestingly, according to [UCSC genome Brower](https://www.genome.ucsc.edu/cgi-bin/hgGene?hgg_gene=ENSMUST00000177671.7&hgg_prot=uc292van.1&hgg_chrom=chrY&hgg_start=90785500&hgg_end=90816464&hgg_type=knownGene&db=mm10&hgsid=1920644492_dMBWtAa75dxnVBVsaTcAHLCeLOll), *Gm47283* was documented as Y-linked gene. Consider the sex chromosome configuration in female mice is XX, it's biologically impossible for a Y-linked gene to be upregulated in female group.
+
 //TODO add Kdm5d, Eif2s3y, Uty, Ddx3y violin plot
 
 <br>
 
 ## Synteny exploration
 
-![**Figure 11:**](figure/chrY_front.png)
+![**Figure 11:** Synteny of Gm47283 on GRCm38/mm10 reference genome; The red box on top indicate the location on Y chromosome](figure/chrY_back.png)
 
 <br>
 
-![**Figure 12:**](figure/chrY_back.png)
+![**Figure 12:** Synteny of top 4 Y-linked DEG upregulated in male on GRCm38/mm10 reference genome; The red box on top indicate the location on Y chromosome](figure/chrY_front.png)
 
 <br>
 
-![**Figure 13:**](figure/pseudoautosomal_region.png)
+All five genes of interest (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) are located at the two telomeric ends of the Y chromosome. Among them, the four genes significantly upregulated in the male group (*Kdm5d*, *Eif2s3y*, *Uty*, and *Ddx3y*) are clustered in close proximity to one another at one telomeric end. Conversely, *Gm47283* is located in isolation at the opposite telomeric end
+
+![**Figure 13:** Schematic of human pseudoautosomal region (PAR) lighlighted in purple on each tip of sex chromosome](figure/pseudoautosomal_region.png)
 
 <br>
+
+Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mice ([Perry et al, 2001](https://doi.org/10.1101/gr.203001)). Genes residing within these regions undergo homologous pairing and recombination during meiosis like the rest of autosomes. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
 
 ## Reciprocal BLAST
 
