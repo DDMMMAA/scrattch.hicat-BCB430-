@@ -19,32 +19,37 @@ library(enrichplot)
 # load current r.proj as r package
 load_all()
 
+##############
+# load data
+# seurat object
+glia_only_seurat <- readRDS("data/Allen/glia_only_SeuratObj.rds")
+# extract expression matrix
+glia_only_counts_matrix <- LayerData(glia_only_seurat, assay = "RNA", layer = "counts")
+
 ############
 # EDA
-# 1. Define the variables you want to plot
+# 1. Define variables to plot
 vars_to_plot <- c("subclass_label", "roi", "sex", "age_cat")
 
-# 2. Initialize a list to store the plots
+# 2. Initialize list to store plots
 pie_plots <- list()
 
 # 3. Loop through each variable to create a pie chart
 for (var in vars_to_plot) {
   
   # A. Summarize the data (Count and Percent)
-  # We use .data[[var]] to dynamically select the column inside the loop
   plot_data <- glia_only_seurat@meta.data %>%
     group_by(.data[[var]]) %>%
     summarise(count = n()) %>%
     mutate(
       prop = count / sum(count),
       percentage = round(prop * 100, 1),
-      # Create a label that looks like: "150 (10.5%)"
+      # Create a label
       label_text = paste0(count, "\n(", percentage, "%)") 
     ) %>%
-    arrange(desc(.data[[var]])) # Fix order for plotting
+    arrange(desc(.data[[var]]))
   
   # B. Create the Pie Chart
-  # Pie charts in ggplot are just Bar Charts with polar coordinates
   p <- ggplot(plot_data, aes(x = "", y = prop, fill = .data[[var]])) +
     geom_bar(width = 1, stat = "identity", color = "white") +
     coord_polar("y", start = 0) +
@@ -67,7 +72,6 @@ for (var in vars_to_plot) {
 }
 
 # 4. Combine the 4 plots into one image
-# (Requires 'patchwork' library, or use cowplot::plot_grid / gridExtra::grid.arrange)
 final_plot <- wrap_plots(pie_plots, ncol = 2)
 
 # 5. Save the result
@@ -76,13 +80,6 @@ ggsave("data/Result/cluster/non-neuro/Cell_Demographics_PieCharts.png",
 
 # Display in RStudio
 print(final_plot)
-
-##############
-# load data
-# seurat object
-glia_only_seurat <- readRDS("D:/BCB430/scrattch.hicat/data/Allen/glia_only_SeuratObj.rds")
-# expression matrix
-glia_only_counts_matrix <- LayerData(glia_only_seurat, assay = "RNA", layer = "counts")
 
 #############
 # Clustering
@@ -105,8 +102,6 @@ buf = iter_clust(norm.dat = glia_only_counts_matrix,
 
 # Sample cells for merging
 sampled.cells = sample_cells(buf$cl, 100)
-# Uncomment the line below on whole dataset
-# sampled.cells = sample(sampled.cells, 200000, replace = F)
 
 subset.dat <- glia_only_counts_matrix[, sampled.cells]
 
@@ -162,44 +157,12 @@ for (var in group_vars) {
 }
 
 #######################
-# DE analysis
-# Identify markers of each cluster
-all.markers <- FindAllMarkers(object = glia_only_seurat)
-all.markers <- split(all.markers, all.markers$cluster)
-
-# filtered_markers <- lapply(all.markers, function(df) {
-#   subset(df, 
-#          pct.1 > 0.1 &           # Criteria A
-#            pct.2 > 0.1 &           # Criteria B
-#            p_val < 0.05 &          # Criteria C
-#            (avg_log2FC > 0.25 | avg_log2FC < -0.25)) # Criteria D
-# })
-
-
-
-#all.markers <- lapply(all.markers, function(df) {
-#  df$p_FC <- (1 - df$p_val) * df$avg_log2FC
-#  return(df)
-#})
-#
-#all.markers <- lapply(all.markers, function(df) {
-#  df$adj_diff <- abs(df$pct.1 - df$pct.2)/max(c(df$pct.1, df$pct.2))
-#  return(df)
-#})
-#
-#all.markers <- lapply(all.markers, function(df) {
-#  df$diff_pfc <- df$adj_diff * df$p_FC
-#  return(df)
-#})
-################
-# age, sex, roi associated DE AMONG whole dataset
-# Goal: Find DE genes for Sex, Age, and ROI across all cells
+# Global DE among sex, age, roi
 
 # 1. Define the variables we want to loop through
 variables_to_test <- c("sex", "age_cat", "roi")
 
 # 2. Initialize a list to store results
-# New Structure: de_results$Variable_Name (No longer nested by subclass)
 global_de_results <- list()
 
 # 3. Main Loop (Iterate through variables only)
@@ -208,7 +171,6 @@ for (var in variables_to_test) {
   message(paste0("\nProcessing Variable Globally: ", var, " ------------------"))
   
   # Use the full object directly
-  # (No subsetting happens here)
   object_to_test <- glia_only_seurat
   
   # Check 1: Does the variable exist in metadata?
@@ -237,7 +199,7 @@ for (var in variables_to_test) {
       verbose = FALSE, 
       logfc.threshold = 0.1, 
       min.pct = 0.01,
-      min.diff.pct = -Inf    # Keep Seurat defaults or your specific params
+      min.diff.pct = -Inf
     )
     
     # D. Add Custom Metrics
@@ -319,14 +281,12 @@ print(p)
 
 #################
 # Subclass-Specific DE Analysis
-# Goal: Find DE genes for Sex, Age, and ROI within each Subclass
 
 # 1. Define the groups we want to loop through
 target_subclasses <- unique(glia_only_seurat$subclass_label)
 variables_to_test <- c("sex", "age_cat", "roi")
 
 # 2. Initialize a list to store results
-# Structure: de_results$Subclass_Name$Variable_Name
 de_results <- list()
 
 # 3. Main Loop
@@ -335,7 +295,7 @@ for (subclass in target_subclasses) {
   message(paste0("\nProcessing Subclass: ", subclass, " ------------------"))
   
   # A. Subset the object to just this subclass
-  # We use subset() to isolate the cells
+  # use subset() to isolate the cells
   sub_obj <- subset(glia_only_seurat, subset = subclass_label == subclass)
   
   # Initialize list for this subclass
@@ -356,7 +316,6 @@ for (subclass in target_subclasses) {
     Idents(sub_obj) <- var
     
     # Check 2: Are there at least 2 groups? 
-    # (e.g., If a subclass only exists in Males, we can't do Male vs Female)
     unique_groups <- unique(Idents(sub_obj))
     unique_groups <- unique_groups[!is.na(unique_groups)] # Remove NAs
     
@@ -366,19 +325,17 @@ for (subclass in target_subclasses) {
     }
     
     # C. Run DE Analysis
-    # We use FindAllMarkers to handle both binary (M vs F) and multi-class (ROI A vs B vs C) cases automatically.
-    # It returns markers for each group compared to the others in this subclass.
     tryCatch({
       markers <- FindAllMarkers(
         object = sub_obj,
-        only.pos = TRUE,       # Only look for upregulated genes (standard for markers)
+        only.pos = TRUE,       # Only look for upregulated genes
         verbose = FALSE, 
         logfc.threshold = 0.1, 
         min.pct = 0.01, 
         min.diff.pct = -Inf
       )
       
-      # D. Add your Custom Metrics (p_FC, etc.)
+      # D. Add Custom Metrics (p_FC, etc.)
       if (nrow(markers) > 0) {
         # Calculate p_FC
         markers$p_FC <- (1 - markers$p_val) * markers$avg_log2FC
@@ -408,23 +365,17 @@ saveRDS(de_results, file = "data/Result/cluster/non-neuro/DE_results.rds")
 
 ################
 # Extract Top 15 DE ranked by adjusted p_value
-# ------------------------------------------------------------------
 # 1. Base Directory Setup
-# ------------------------------------------------------------------
 base_dir_top15_global <- file.path("data", "Result", "cluster", "non-neuro", "Top15_DE", "global")
 base_dir_top15_subclass <- file.path("data", "Result", "cluster", "non-neuro", "Top15_DE", "subclass")
 
-# ------------------------------------------------------------------
 # 2. Extraction and Export Function
-# ------------------------------------------------------------------
 extract_and_save_top15 <- function(de_df, out_path) {
   
   # Validation: Ensure dataframe exists and is not empty
   if (is.null(de_df) || nrow(de_df) == 0) return(invisible())
   
   # Group by cluster to ensure we get top 15 PER condition
-  # Primary sort: p_val_adj (ascending / non-decreasing)
-  # Secondary sort: absolute avg_log2FC (descending) to break p-value ties
   top15_df <- de_df %>%
     group_by(cluster) %>%
     arrange(p_val_adj, desc(abs(avg_log2FC))) %>%
@@ -435,9 +386,7 @@ extract_and_save_top15 <- function(de_df, out_path) {
   write.csv(top15_df, file = out_path, row.names = FALSE)
 }
 
-# ------------------------------------------------------------------
 # 3. Execute Loop: Global Top 15 DE
-# ------------------------------------------------------------------
 message("\nExtracting top 15 global DE genes...")
 
 for (var in names(global_de_results)) {
@@ -452,14 +401,11 @@ for (var in names(global_de_results)) {
   extract_and_save_top15(global_de_results[[var]], out_file)
 }
 
-# ------------------------------------------------------------------
 # 4. Execute Loop: Subclass Top 15 DE
-# ------------------------------------------------------------------
 message("Extracting top 15 subclass DE genes...")
 
 for (subclass in names(de_results)) {
-  
-  # Enforce string sanitization for directory creation
+
   safe_subclass <- gsub("[ /]", "_", subclass)
   
   for (var in names(de_results[[subclass]])) {
@@ -523,7 +469,7 @@ p <- ggplot(plot_data, aes(x = Subclass, y = Count, fill = Variable)) +
   ) +
   theme_bw() +
   theme(
-    axis.text.y = element_text(size = 10), # Adjust text size if you have many subclasses
+    axis.text.y = element_text(size = 10), # Adjust text size
     legend.position = "top"
   ) +
   geom_text(aes(label = Count), position = position_dodge(width = 0.9), hjust = -0.2, size = 3) # Add numbers
@@ -534,9 +480,7 @@ ggsave("data/Result/cluster/non-neuro/DE_Counts_Summary.png", p, width = 10, hei
 
 #######################
 # normalizae DE count
-# ------------------------------------------------------------------
 # 1. Extract the Raw Number of DE Genes
-# ------------------------------------------------------------------
 message("Extracting raw DE counts...")
 summary_list <- list()
 
@@ -562,9 +506,7 @@ plot_data$Variable <- factor(plot_data$Variable,
                              levels = c("sex", "age_cat", "roi"),
                              labels = c("Sex", "Age", "ROI"))
 
-# ------------------------------------------------------------------
 # 2. Calculate Normalization Metrics (Average & Union)
-# ------------------------------------------------------------------
 message("Calculating Average and Union normalization metrics...")
 
 # A. Average Metric: Calculate average detected genes per subclass
@@ -602,9 +544,7 @@ union_genes_df <- do.call(rbind, union_genes_list)
 # Merge union metric into plot_data
 plot_data <- merge(plot_data, union_genes_df, by = "Subclass")
 
-# ------------------------------------------------------------------
 # 3. Compute Final Normalized Values (Both as Percentages)
-# ------------------------------------------------------------------
 # Average Normalized: Percentage (%) of average detected genes/cell
 plot_data$Avg_Normalized_Count <- (plot_data$Count / plot_data$Avg_NonZero_Genes) * 100
 
@@ -612,9 +552,7 @@ plot_data$Avg_Normalized_Count <- (plot_data$Count / plot_data$Avg_NonZero_Genes
 plot_data$Union_Normalized_Count <- (plot_data$Count / plot_data$Union_NonZero_Genes) * 100
 
 
-# ------------------------------------------------------------------
 # 4. Create the Three Plots
-# ------------------------------------------------------------------
 message("Generating the three-panel plot...")
 
 # Plot A: Unnormalized (Raw Counts)
@@ -670,13 +608,11 @@ p_union <- ggplot(plot_data, aes(x = Subclass, y = Union_Normalized_Count, fill 
   ) +
   geom_text(aes(label = round(Union_Normalized_Count, 2)), position = position_dodge(width = 0.9), hjust = -0.1, size = 3)
 
-# ------------------------------------------------------------------
 # 5. Combine and Save
-# ------------------------------------------------------------------
 # Stitch the 3 plots together in one row, collecting legends at the top
 final_comparison_plot <- p_raw + p_avg + p_union + plot_layout(ncol = 3, guides = "collect") & theme(legend.position = "top")
 
-# Display in your R console/viewer
+# Display in R console/viewer
 print(final_comparison_plot)
 
 # Save to disk
@@ -712,7 +648,7 @@ run_go_comparison <- function(de_df, organism_db = org.Mm.eg.db) {
     data = sig_df, 
     fun = "enrichGO",
     OrgDb = organism_db,
-    keyType = "SYMBOL", # Seurat usually outputs Gene Symbols
+    keyType = "SYMBOL",
     ont = "BP",
     pAdjustMethod = "BH",
     pvalueCutoff = 0.05,
@@ -737,9 +673,7 @@ run_go_comparison <- function(de_df, organism_db = org.Mm.eg.db) {
   return(list(BP = go_bp, MF = go_mf))
 }
 
-# ---------------------------------------------------------
 # 2. Process global_de_results
-# ---------------------------------------------------------
 message("\nStarting Global GO Enrichment...")
 global_go_results <- list()
 
@@ -752,9 +686,7 @@ for (var in names(global_de_results)) {
 saveRDS(global_go_results, file = "data/Result/cluster/non-neuro/global_GO_results.rds")
 
 
-# ---------------------------------------------------------
 # 3. Process nested de_results (Subclass-specific)
-# ---------------------------------------------------------
 message("\nStarting Subclass-Specific GO Enrichment...")
 subclass_go_results <- list()
 
@@ -776,15 +708,11 @@ saveRDS(subclass_go_results, file = "data/Result/cluster/non-neuro/subclass_GO_r
 message("\nGO Enrichment complete!")
 
 #GO Visualization
-# ------------------------------------------------------------------
 # 1. Base Directory Setup
-# ------------------------------------------------------------------
 base_dir_global <- file.path("data", "Result", "cluster", "non-neuro", "GO_plots", "global")
 base_dir_subclass <- file.path("data", "Result", "cluster", "non-neuro", "GO_plots", "subclass")
 
-# ------------------------------------------------------------------
 # 2. Refactored Plotting Function
-# ------------------------------------------------------------------
 generate_and_save_plots <- function(go_res_list, title_prefix, file_prefix, out_dir) {
   
   if (is.null(go_res_list)) return(invisible())
@@ -825,9 +753,7 @@ generate_and_save_plots <- function(go_res_list, title_prefix, file_prefix, out_
   }
 }
 
-# ------------------------------------------------------------------
 # 3. Execute Loop: Global Results
-# ------------------------------------------------------------------
 message("\nProcessing Global GO visualizations...")
 
 for (var in names(global_go_results)) {
@@ -844,9 +770,7 @@ for (var in names(global_go_results)) {
   )
 }
 
-# ------------------------------------------------------------------
 # 4. Execute Loop: Subclass Results (Nested Architecture)
-# ------------------------------------------------------------------
 message("\nProcessing Subclass-specific GO visualizations...")
 
 for (subclass in names(subclass_go_results)) {
