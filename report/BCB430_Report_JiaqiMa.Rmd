@@ -38,15 +38,15 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-![**Figure 1:** Overview of scRNA-seq data analysis workflow ([He et al, 2022](https://doi.org/10.52601/bpr.2022.210041))](figure/scRNA_seq_pipeline.jpg)
+![**Figure 1:** Overview of scRNA-seq data analysis workflow ([He et al., 2022](https://doi.org/10.52601/bpr.2022.210041))](figure/scRNA_seq_pipeline.jpg)
 
 <br>
 
-Single-cell RNA sequencing (scRNA-seq) has revolutionized our ability to characterize cellular heterogeneity. Within current bioinformatic pipeline, clustering and cell-type annotation represent one of the critical steps for translating raw count matrices into biologically meaningful information ([He et al, 2022](https://doi.org/10.52601/bpr.2022.210041)). Currently, researchers rely on two primary methodologies for cell-type annotation: manually identifying populations via established marker genes, or automatically mapping the data against a reference transcriptome ([He et al, 2022](https://doi.org/10.52601/bpr.2022.210041),  [Heumos et al, 2023](https://doi.org/10.1038/s41576-023-00586-w)). Annotating cells based on established marker genes is biologically robust. However, this approach is relatively slow and typically yields low-resolution annotations. Conversely, mapping data to a reference transcriptome can rapidly generate high-resolution annotations. The critical caveat is that the robustness of these automated annotations depends heavily on the accuracy of the choice of reference transcriptome.
+Single-cell RNA sequencing (scRNA-seq) has revolutionized our ability to characterize cellular heterogeneity. Within current bioinformatic pipelines, clustering and cell-type annotation represent one of the critical steps for translating raw count matrices into biologically meaningful information ([He et al., 2022](https://doi.org/10.52601/bpr.2022.210041)). Currently, researchers rely on two primary methodologies for cell-type annotation: manually identifying populations via established marker genes, or automatically mapping the data against a reference transcriptome ([He et al., 2022](https://doi.org/10.52601/bpr.2022.210041); [Heumos et al., 2023](https://doi.org/10.1038/s41576-023-00586-w)). Annotating cells based on established marker genes is biologically robust. However, this approach is relatively slow and typically yields low-resolution annotations. Conversely, mapping data to a reference transcriptome can rapidly generate high-resolution annotations. The critical caveat is that the robustness of these automated annotations depends heavily on the robustness of the selected reference transcriptome.
 
-One example reference transcriptome is [Allen brain atlas](https://mouse.brain-map.org/). They update their atlas in 2025, sequenced 108 mice (44 aged, 64 adult; 51 female, 57 male), yielded about 2 million cells post quality control, covered about 35% of whole mice brain volume, making them the highest coverage atlas at the date of publication ([Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8)). While this atlases provide an invaluable resource, we suspect that standard clustering pipelines, including those utilized by the Allen Brain Atlas, are vulnerable to two major computational flaws. First, executing global clustering without appropriately stratifying the data by fundamental biological metadata (such as sex, age, and region) risks masking critical, state-specific transcriptional differences. This oversimplification dilutes the important metadata specific biological signal, resulting in false negatives. Second, algorithms overemphasise high-resolution cluster may result in over-clustering. This mathematically generate small and rare cluster originated from noise but can be interpreted as "novel" cell-type, resulting in false positive.
+One example reference transcriptome is [Allen brain atlas](https://mouse.brain-map.org/). They update their atlas in 2025, sequenced 108 mice (44 aged, 64 adult; 51 female, 57 male), yielded approximately 2 million cells post quality control, covering about 35% of whole mice brain volume, making it the highest coverage atlas at the date of publication ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8)). While this atlases provide an invaluable resource, we suspect that standard clustering pipelines, including those utilized by the Allen Brain Atlas, are vulnerable to two major computational flaws. First, executing global clustering without appropriately stratifying the data by fundamental biological metadata (such as sex, age, and region) risks masking critical, state-specific transcriptional differences. This oversimplification dilutes the important metadata specific biological signal, resulting in false negatives. Second, algorithms overemphasize high-resolution cluster may result in over-clustering. This mathematically generate small, rare cluster originating from noise but can be interpreted as "novel" cell-type, resulting in false positive.
 
-To rigorously test the robustness of Allen brain atlas's cell type annotation, this project evaluates the glial cell population, known to be heterogeneous and transcriptionally dynamic, making them an ideal population to expose annotation limitations. By systematically testing established glial annotations against key metadata variables known to drive transcriptomic shifts (sex, age, and hippocampal formation(HPF)).
+To rigorously test the robustness of Allen brain atlas's cell type annotation, this project evaluates the glial cell population, known to be heterogeneous and transcriptionally dynamic ([Sun et al., 2021](https://doi.org/10.1007/s10571-021-01159-3); [Sadick et al., 2022](https://doi.org/10.1016/j.neuron.2022.03.008)), making them ideal population to expose annotation limitations. To execute this test, three biological metadata variables known to drive transcriptomic shifts, sex, age, and region, were selected for testing. Sex is known to drive transcriptomic changes due to genetic and hormonal differences ([Szadvári et al., 2023](https://doi.org/10.1016/j.physbeh.2022.114038)), with studies observing stronger microglial activation in female Alzheimer's Disease (AD) cases([Kodama & Gan, 2019](https://doi.org/10.1016/j.molmed.2019.05.001)). Age is the primary risk factor for neurodegenerative diseases, driving common transcriptomic changes that include chronic inflammation and mitochondrial dysfunction ([Hou et al., 2019](https://doi.org/10.1038/s41582-019-0244-7); [Mattson & Arumugam, 2018](https://doi.org/10.1016/j.cmet.2018.05.011)).Finally, the Hippocampal Formation (HPF) was selected as the region of interest because it is highly vulnerable and frequently affected in various neurodegenerative diseases ([Davidson & Stevenson, 2024](https://doi.org/10.3390/ijms25041991)), while also exhibiting sex-specific functional differences ([Yagi & Galea, 2018](https://doi.org/10.1038/s41386-018-0208-4)).
 
 # Objective
 
@@ -59,17 +59,25 @@ To rigorously test the robustness of Allen brain atlas's cell type annotation, t
 
 ## Animal Model
 
-//To be done in report
+The mice breeding and sampling was conducted by [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8).
+
+The dataset derives from 108 wild-type C57BL/6J mice, explicitly stratified by age and sex:
+
+-    Aged group: 44 mice (20 female, 24 male) euthanized at postnatal days (P) 540–553 (~18 months).
+
+-    Adult group: 64 mice (31 female, 33 male) euthanized at P53–69 (~2 months).
+
+Animals presenting with gross health abnormalities were excluded prior to sequencing, and tissue collections were standardized within a 3-hour Zeitgeber window to minimize circadian variance. Notably, while the dataset is highly stratified by sex, the estrous cycles of the female mice were not tracked during tissue collection. This represents a minor but relevant biological limitation when computationally isolating baseline sex-driven transcriptomic variance.
 
 ## Data Source
 
 -    Single cell RNA-seq (scRNA-seq)
--    Original paper: [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8)
+-    Original paper: [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8)
 -    Deposited in [Neuroscience Multi-omic Data Archive (NeMO)](https://assets.nemoarchive.org/dat-61kfys3)
 -    Download url: https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar
 -    Note: Only Hippocampal formation (HPF) data were subjected to this analysis
 
-[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) sequenced brain sample collected from 44 aged mice (20 female, 24 male) and 64 young adult mice (31 female, 33 male) using Illumina NovaSeq6000 sequencing system ([Modi et al, 2021](https://doi-org.myaccess.library.utoronto.ca/10.1007/978-1-0716-1099-2_2)) and 10X Genomics CellRanger pipeline (v.6.0.0) to map sequenced reads to `mm10/gencode.vM23` reference genome ([Frankish et al, 2019](https://doi-org.myaccess.library.utoronto.ca/10.1093/nar/gky955)). The raw sequence data contains `2,777,165` cells categorized in 6 major regions, 16 broad regions.
+[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) sequenced brain sample collected from 44 aged mice (20 female, 24 male) and 64 young adult mice (31 female, 33 male) using Illumina NovaSeq6000 sequencing system ([Modi et al., 2021](https://doi-org.myaccess.library.utoronto.ca/10.1007/978-1-0716-1099-2_2)) and 10X Genomics CellRanger pipeline (v.6.0.0) to map sequenced reads to `mm10/gencode.vM23` reference genome ([Frankish et al., 2019](https://doi-org.myaccess.library.utoronto.ca/10.1093/nar/gky955)). The raw sequence data contains `2,777,165` cells categorized in 6 major regions, 16 broad regions.
 
 The 6 major regions were:
 
@@ -82,23 +90,23 @@ The 6 major regions were:
 
 ## Packages Usage
 
-[Seurat](https://satijalab.org/seurat/) ([Hao et al, 2023](https://satijalab.org/seurat/)) was utilized as basic framework, to take advantage of its mature pipeline.
+[Seurat](https://satijalab.org/seurat/) ([Hao et al., 2023](https://satijalab.org/seurat/)) was utilized as basic framework, to take advantage of its mature pipeline.
 
 The following table categorized R packages utilization by biological analysis, data visualization, and pipeline utilities within this project based on their primary functionality.
 
 | Category | Package | Version | Description | Reference |
 | :--- | :--- | :--- | :--- | :--- |
-| Analytical | `Seurat` | *5.4.0* | Basic framework for data management, Differential Gene Expression (DEG) analysis, and Umap visualization | [Hao et al, 2023](https://satijalab.org/seurat/) |
-| Analytical | `scrattch.bigcat` | *0.0.1* | Initially selected for clustering, the same package utilized by [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8). **Note:** Utilization was unsuccessful due to limited documentation and local compatibility issues. | Unpublished; [github](https://github.com/AllenInstitute/scrattch.bigcat) |
+| Analytical | `Seurat` | *5.4.0* | Basic framework for data management, Differential Gene Expression (DEG) analysis, and Umap visualization | [Hao et al., 2023](https://satijalab.org/seurat/) |
+| Analytical | `scrattch.bigcat` | *0.0.1* | Initially selected for clustering, the same package utilized by [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8). **Note:** Utilization was unsuccessful due to limited documentation and local compatibility issues. | Unpublished; [github](https://github.com/AllenInstitute/scrattch.bigcat) |
 | Analytical | `scrattch.hicat` | *1.0.0* | Alternative clustering package utilized; selected for superior documentation. | Unpublished; [github](https://github.com/AllenInstitute/scrattch.hicat) |
 | Analytical | `Presto` | *1.0.0* | Fast implementation of Wilcoxon Rank Sum test | [Nathan & Raychaudhuri, 2019](https://doi.org/10.1101/653253) |
 | Visualization | `ggplot2` | *4.0.1* | Exploratory Data Analysis (EDA); visualization of cell subclass, ROI, sex, age, and doublet scores. | [Wickham, 2016](https://ggplot2.tidyverse.org) |
 | Visualization | `patchwork` | *1.3.2* | Plots Composer | [Pedersen, 2025](https://patchwork.data-imaginist.com) |
-| Utilities | `annadataR` | *1.0.0* | Data loading; converting Python-native `.h5ad` formats into R-compatible Seurat objects. | [Deconinck et al, 2026](https://doi.org/10.1101/2025.08.18.669052) |
+| Utilities | `annadataR` | *1.0.0* | Data loading; converting Python-native `.h5ad` formats into R-compatible Seurat objects. | [Deconinck et al., 2026](https://doi.org/10.1101/2025.08.18.669052) |
 | Utilities | `bookdown` | *0.46* | HTML report formatting and generation. | [Xie, 2016](https://bookdown.org/yihui/bookdown) |
 | Utilities | `knitr` | *1.51* | R Markdown environment configuration and dynamic table rendering. | [Xie, 2014](https://yihui.org/knitr/) |
-| Utilities | `Matrix` | *1.7-3* | Sparse and Dense Matrix data manipulation  | [Bates et al, 2025](https://doi.org/10.32614/CRAN.package.Matrix) |
-| Utilities | `devtools` | *2.4.6* | Grant developer mode for R packages, tuning `scrattch.bigcat` and `scrattch.hicat`  | [Wickham et al, 2025](https://doi.org/10.32614/CRAN.package.devtools) |
+| Utilities | `Matrix` | *1.7-3* | Sparse and Dense Matrix data manipulation  | [Bates et al., 2025](https://doi.org/10.32614/CRAN.package.Matrix) |
+| Utilities | `devtools` | *2.4.6* | Grant developer mode for R packages, tuning `scrattch.bigcat` and `scrattch.hicat`  | [Wickham et al., 2025](https://doi.org/10.32614/CRAN.package.devtools) |
 
 **Table 1:** Summary of R packages utilized for data processing, analysis, and document generation. Packages are categorized by their primary functional role within the bioinformatics pipeline (Analytical, Visualization, or Utilities). Note that the original clustering package, scrattch.bigcat, was substituted with scrattch.hicat due to local environment incompatibilities and insufficient documentation.
 
@@ -108,10 +116,10 @@ The normalization and quality control step were conducted by [Jin et al (2025)](
 
 ## Data loading and Sub-setting
 
-![**Figure 3:** Schematic of dissected brain regions; The red box indicates subsetted regions. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
+![**Figure 3:** Schematic of dissected brain regions; The red box indicates subsetted regions. (Modified from [Jin et al., 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
 )](figure/allen_region.png)
 
-![**Figure 4:** Schematic of hierarchical "Cell type" annotation; The red box indicates subsetted classes. (Modified from [Jin et al, 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
+![**Figure 4:** Schematic of hierarchical "Cell type" annotation; The red box indicates subsetted classes. (Modified from [Jin et al., 2025; Figure 1](https://doi.org/10.1038/s41586-024-08350-8)
 )](figure/allen_annotation.png)
 
 <br>
@@ -168,7 +176,7 @@ To investigate the genomic location and syntenic relationships of the identified
 
 ## Reciprocal BLAST
 
-To assess the sequence homology between the X and Y alleles of *Gm47283*, an intra-species reciprocal BLAST strategy was employed. The genomic sequences for both alleles were fetched from the Mouse Genome Informatics (MGI) database (Accession IDs: [MGI:2384747](https://www.informatics.jax.org/marker/MGI:2384747) for the X allele; [MGI:6096131](https://www.informatics.jax.org/marker/MGI:6096131) for the Y allele). These sequences were subsequently utilized as independent queries in the Nucleotide BLAST (BLASTN) algorithm via the National Center for Biotechnology Information (NCBI) web interface ([Sayers et al, 2025](https://doi.org/10.1093/nar/gkae979)). Searches were conducted against the core nucleotide collection (`core_nt`) database, with the search space strictly filtered to include only *Mus musculus* taxa (taxid:10090). The resulting alignments were manually evaluated to determine whether the *Gm47283* X and Y chromosomal loci emerged as reciprocal top hits, thereby assessing the validity of their sequence similarity.
+To assess the sequence homology between the X and Y alleles of *Gm47283*, an intra-species reciprocal BLAST strategy was employed. The genomic sequences for both alleles were fetched from the Mouse Genome Informatics (MGI) database (Accession IDs: [MGI:2384747](https://www.informatics.jax.org/marker/MGI:2384747) for the X allele; [MGI:6096131](https://www.informatics.jax.org/marker/MGI:6096131) for the Y allele). These sequences were subsequently utilized as independent queries in the Nucleotide BLAST (BLASTN) algorithm via the National Center for Biotechnology Information (NCBI) web interface ([Sayers et al., 2025](https://doi.org/10.1093/nar/gkae979)). Searches were conducted against the core nucleotide collection (`core_nt`) database, with the search space strictly filtered to include only *Mus musculus* taxa (taxid:10090). The resulting alignments were manually evaluated to determine whether the *Gm47283* X and Y chromosomal loci emerged as reciprocal top hits, thereby assessing the validity of their sequence similarity.
 
 To determine whether the murine *Gm47283* gene possesses conserved evolutionary counterparts within the human genome, an inter-species homology search was subsequently conducted. All sequence inputs and algorithm parameters were kept identical to the intra-species search, with the taxonomic search space strictly filtered to include only *Homo sapiens* (taxid:9606). The resulting alignments were manually evaluated to identify potential human homologs.
 
@@ -184,7 +192,7 @@ The Post-QC normalized scRNA-seq data fetched from [Neuroscience Multi-omic Data
 
 <br>
 
-There were 16 subclasses in the dataset, dominated by `Astro-TE NN` (43.7%). There were 4 sub-HPF region (denote as region of interest, roi in figure 5) revealed from dataset. However, [Jin et al, 2025](https://doi.org/10.1038/s41586-024-08350-8) only document three roi as shown in figure 3, `HIP` wasn't documented. Judged by the same prefix of `HIP` and `HIP - CA` It was supposed to be part of `HIP - CA`. 
+There were 16 subclasses in the dataset, dominated by `Astro-TE NN` (43.7%). There were 4 sub-HPF region (denote as region of interest, roi in figure 5) revealed from dataset. However, [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8) only document three roi as shown in figure 3, `HIP` wasn't documented. Judged by the same prefix of `HIP` and `HIP - CA` It was supposed to be part of `HIP - CA`. 
 
 The sex was slightly biased toward male group. The age is biased toward aged group.
 
@@ -194,7 +202,7 @@ The sex was slightly biased toward male group. The age is biased toward aged gro
 
 <br>
 
-The clustering result was similar to subclass annotation by a glance. However, there were 4 small clusters (20, 24, 25, 26), locate at the left tip of OPC cluster close to oligodendrocyte, identified from clustering but not present in subclass annotation. Consider oligodendrocyte is differentiated from OPC ([Tiane et al, 2019](https://doi.org/10.3390/cells8101236)), those 4 small clusters (20, 24, 25, 26) might indicate intermediate differentiating state from OPC to oligodendrocyte.
+The clustering result was similar to subclass annotation by a glance. However, there were 4 small clusters (20, 24, 25, 26), locate at the left tip of OPC cluster close to oligodendrocyte, identified from clustering but not present in subclass annotation. Consider oligodendrocyte is differentiated from OPC ([Tiane et al., 2019](https://doi.org/10.3390/cells8101236)), those 4 small clusters (20, 24, 25, 26) might indicate intermediate differentiating state from OPC to oligodendrocyte.
 
 Visual assessment of the UMAP projections indicates that among the three metadata variables, roi drives the most pronounced transcriptomic heterogeneity, particularly within astrocytic populations. Age serves as the secondary driver of variance, predominantly segregating astrocyte and oligodendrocyte clusters, whereas biological sex exerts the subtlest visual influence.
 
@@ -225,7 +233,7 @@ Among the top 15 DEGs identified in each subclass during sex comparisons, *Gm472
 
 <br>
 
-Conversely, other top 4 Y-linked gene (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) were expressed as expected, only expressed in male group.
+Conversely, other top 4 differentially expressed Y-linked gene (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) only expressed in male group as expected.
 
 ## Synteny exploration
 
@@ -241,7 +249,7 @@ All five genes of interest (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) a
 
 <br>
 
-Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mice ([Perry et al, 2001](https://doi.org/10.1101/gr.203001)). Genes residing within these regions undergo homologous pairing and recombination during meiosis like the rest of autosomes. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
+Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mice ([Perry et al., 2001](https://doi.org/10.1101/gr.203001)). Genes residing within these regions undergo homologous pairing and recombination during meiosis like the rest of autosomes. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
 
 ## Reciprocal BLAST
 
@@ -263,7 +271,7 @@ The interspecies BLAST analysis revealed sequences similarity to *Gm47283* locat
 
 ## Read Mapping Algorithm Assessment
 
-To evaluate the potential for algorithmic artifacts contributing to the potential *Gm47283* mismapping, the foundational read mapping pipeline utilized by [Jin et al, (2025)](https://doi.org/10.1038/s41586-024-08350-8) was critically assessed. According to the original study's methodology, read mapping was executed using the 10x Genomics [Cell Ranger pipeline (v.6.0.0)](https://www.10xgenomics.com/support/cn/software/cell-ranger/latest/algorithms-overview/cr-gex-algorithm). Cell Ranger further employed the Spliced Transcripts Alignment to a Reference (STAR) algorithm ([Dobin et al, 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104886)) to map sequenced reads to the reference genome. 
+To evaluate the potential for algorithmic artifacts contributing to the potential *Gm47283* mismapping, the foundational read mapping pipeline utilized by [Jin et al., (2025)](https://doi.org/10.1038/s41586-024-08350-8) was critically assessed. According to the original study's methodology, read mapping was executed using the 10x Genomics [Cell Ranger pipeline (v.6.0.0)](https://www.10xgenomics.com/support/cn/software/cell-ranger/latest/algorithms-overview/cr-gex-algorithm). Cell Ranger further employed the Spliced Transcripts Alignment to a Reference (STAR) algorithm ([Dobin et al., 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104886)) to map sequenced reads to the reference genome. 
 
 A review of the STAR algorithmic architecture indicates that it employs a local linear scoring model to evaluate alignments—penalizing mismatches, insertions, and deletions proportionately. Furthermore, while the STAR algorithm natively permits user-defined handling of multimapped reads (reads that mapped to multiple genomic loci with equal scoring confidence), official 10x Genomics [Q&A documentation](https://kb.10xgenomics.com/s/article/4409878456077-How-to-extract-multi-mapped-reads-from-Cell-Ranger-BAM-files) confirms that the standard Cell Ranger pipeline strictly ignores all multimapped reads during quality control phase. This algorithmic parameter was identified as a potential vulnerability when evaluating highly homologous loci, as true reads originating from the *Gm47283* X and Y alleles would likely be discarded.
 
