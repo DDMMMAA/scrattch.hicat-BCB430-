@@ -44,7 +44,7 @@ knitr::opts_chunk$set(
 
 Single-cell RNA sequencing (scRNA-seq) has revolutionized our ability to characterize cellular heterogeneity. Within current bioinformatic pipelines, clustering and cell-type annotation represent one of the critical steps for translating raw count matrices into biologically meaningful information ([He et al., 2022](https://doi.org/10.52601/bpr.2022.210041)). Currently, researchers rely on two primary methodologies for cell-type annotation: manually identifying populations via established marker genes, or automatically mapping the data against a reference transcriptome ([He et al., 2022](https://doi.org/10.52601/bpr.2022.210041); [Heumos et al., 2023](https://doi.org/10.1038/s41576-023-00586-w)). Annotating cells based on established marker genes is biologically robust. However, this approach is relatively slow and typically yields low-resolution annotations. Conversely, mapping data to a reference transcriptome can rapidly generate high-resolution annotations. The critical caveat is that the robustness of these automated annotations depends heavily on the robustness of the selected reference transcriptome.
 
-One example reference transcriptome is [Allen brain atlas](https://mouse.brain-map.org/). They update their atlas in 2025, sequenced 108 mice (44 aged, 64 adult; 51 female, 57 male), yielded approximately 2 million cells post quality control, covering about 35% of whole mice brain volume, making it the highest coverage atlas at the date of publication ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8)). While this atlases provide an invaluable resource, we suspect that standard clustering pipelines, including those utilized by the Allen Brain Atlas, are vulnerable to two major computational flaws. First, executing global clustering without appropriately stratifying the data by fundamental biological metadata (such as sex, age, and region) risks masking critical, state-specific transcriptional differences. This oversimplification dilutes the important metadata specific biological signal, resulting in false negatives. Second, algorithms overemphasize high-resolution cluster may result in over-clustering. This mathematically generate small, rare cluster originating from noise but can be interpreted as "novel" cell-type, resulting in false positive.
+One example reference transcriptome is [Allen brain atlas](https://mouse.brain-map.org/). They update their atlas in 2025, sequenced 108 mice (44 aged, 64 adult; 51 female, 57 male), yielded approximately 2 million cells post quality control, covering about 35% of whole mouse brain volume, making it the highest coverage atlas at the date of publication ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8)). While this atlas provides an invaluable resource, we suspect that standard clustering pipelines, including those utilized by the Allen Brain Atlas, are vulnerable to two major computational flaws. First, executing global clustering without appropriately stratifying the data by fundamental biological metadata (such as sex, age, and region) risks masking critical, state-specific transcriptional differences. This oversimplification dilutes the important metadata specific biological signal, resulting in false negatives. Second, algorithms that overemphasize high-resolution cluster may result in over-clustering. This mathematically generate small, rare cluster originating from noise but can be interpreted as "novel" cell-type, resulting in false positive.
 
 To rigorously test the robustness of Allen brain atlas's cell type annotation, this project evaluates the glial cell population, known to be heterogeneous and transcriptionally dynamic ([Sun et al., 2021](https://doi.org/10.1007/s10571-021-01159-3); [Sadick et al., 2022](https://doi.org/10.1016/j.neuron.2022.03.008)), making them ideal population to expose annotation limitations. To execute this test, three biological metadata variables known to drive transcriptomic shifts, sex, age, and region, were selected for testing. Sex is known to drive transcriptomic changes due to genetic and hormonal differences ([Szadvári et al., 2023](https://doi.org/10.1016/j.physbeh.2022.114038)), with studies observing stronger microglial activation in female Alzheimer's Disease (AD) cases([Kodama & Gan, 2019](https://doi.org/10.1016/j.molmed.2019.05.001)). Age is the primary risk factor for neurodegenerative diseases, driving common transcriptomic changes that include chronic inflammation and mitochondrial dysfunction ([Hou et al., 2019](https://doi.org/10.1038/s41582-019-0244-7); [Mattson & Arumugam, 2018](https://doi.org/10.1016/j.cmet.2018.05.011)).Finally, the Hippocampal Formation (HPF) was selected as the region of interest because it is highly vulnerable and frequently affected in various neurodegenerative diseases ([Davidson & Stevenson, 2024](https://doi.org/10.3390/ijms25041991)), while also exhibiting sex-specific functional differences ([Yagi & Galea, 2018](https://doi.org/10.1038/s41386-018-0208-4)).
 
@@ -59,7 +59,7 @@ To rigorously test the robustness of Allen brain atlas's cell type annotation, t
 
 ## Animal Model
 
-The mice breeding and sampling was conducted by [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8).
+Mouse breeding and sampling were conducted by [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8).
 
 The dataset derives from 108 wild-type C57BL/6J mice, explicitly stratified by age and sex:
 
@@ -208,23 +208,23 @@ Visual assessment of the UMAP projections indicates that among the three metadat
 
 ## Differential Gene Expression Analysis
 
-![**Figure 7:** Global differentially expressed gene (DEG) count; Y-axis is the number of significantly differentilly expressed gene; X-axis are groups separated by age, roi, and sex](figure/Global_DE_Counts.png)
+![**Figure 7:** Global differentially expressed gene (DEG) count; Y-axis is the number of significantly differentially expressed gene; X-axis are groups separated by age, roi, and sex](figure/Global_DE_Counts.png)
 
 <br>
 
 The number of globally differentially expressed gene (DEG) aligned with previous UMAP visualization grouped by metadata, which both indicate roi is the strongest contributor to cell heterogeneity followed by age and sex.
 
-![**Figure 8:** Raw and normalized local DEG count; Y-axis is each subclass grouped by three categories, 14 out of 16 subclass contain differentially expressed gene. Astroependymal and tanycyte doesn't contain differentially expressed gene because of insufficient number of cell; X-axis is the number of significantly differentially expressed gene; (A) Raw counts; (B) Normalizaed by averages number of genes detected per cell; (C) Normalized by the total number of genes detected per subclass. ](figure/DE_Counts_3Way_Comparison.png)
+![**Figure 8:** Raw and normalized local DEG count; Y-axis is each subclass grouped by three categories, 14 out of 16 subclass contain differentially expressed gene. Astroependymal and tanycyte doesn't contain differentially expressed gene because of insufficient number of cell; X-axis is the number of significantly differentially expressed gene; (A) Raw counts; (B) Normalized by averages number of genes detected per cell; (C) Normalized by the total number of genes detected per subclass. ](figure/DE_Counts_3Way_Comparison.png)
 
 <br>
 
-Compare raw DEG count with normalized count, the overall pattern preserved. Compare different subclasses within a raw/normalized count panel, astrocyte revealed to be the most heterogeneous subclass, followed by oligodendrocyte. Compare different categories (sex, age, roi) within a subclass, the result aligned with UMAP visualization and global result which all indicate roi is the strongest contributor to cell heterogeneity followed by age and sex. Only Ependymal subclass diverge from the roi, age, sex pattern of contribution, but weakly and and based on an insufficient number of tested cells.
+Compare raw DEG counts with normalized counts, the overall pattern preserved. Compare different subclasses within a raw/normalized count panel, astrocyte revealed to be the most heterogeneous subclass, followed by oligodendrocyte. Compare different categories (sex, age, roi) within a subclass, the result aligned with UMAP visualization and global result which all indicate roi is the strongest contributor to cell heterogeneity followed by age and sex. Only Ependymal subclass diverges from the roi, age, sex pattern of contribution, but weakly and based on an insufficient number of tested cells.
 
-![**Figure 9:** Expression level of Gm47283 across 16 glial subclasses between sex, upregulated in female in 10 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subcalss (***: adjusted p < 0.001; ns: not significant)](figure/Gm47283 expression level whole glia.png)
+![**Figure 9:** Expression level of Gm47283 across 16 glial subclass between sex, upregulated in female in 10 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subclass (***: adjusted p < 0.001; ns: not significant)](figure/Gm47283 expression level whole glia.png)
 
 <br>
 
-Among the top 15 DEGs identified in each subclass during sex comparisons, *Gm47283* was significantly upregulated in the female group across 10 of the 16 subclasses. Although the magnitude of the fold change was modest, the statistical significance of this differential expression was extremely high. Interestingly, according to [UCSC genome Brower](https://www.genome.ucsc.edu/cgi-bin/hgGene?hgg_gene=ENSMUST00000177671.7&hgg_prot=uc292van.1&hgg_chrom=chrY&hgg_start=90785500&hgg_end=90816464&hgg_type=knownGene&db=mm10&hgsid=1920644492_dMBWtAa75dxnVBVsaTcAHLCeLOll), *Gm47283* was documented as Y-linked gene. Consider the sex chromosome configuration in female mice is XX, it's biologically impossible for a Y-linked gene to be upregulated in female group.
+Among the top 15 DEGs identified in each subclass during sex comparisons, *Gm47283* was significantly upregulated in the female group across 10 of the 16 subclasses. Although the magnitude of the fold change was modest, the statistical significance of this differential expression was extremely high. Interestingly, according to [UCSC Genome Browser](https://www.genome.ucsc.edu/cgi-bin/hgGene?hgg_gene=ENSMUST00000177671.7&hgg_prot=uc292van.1&hgg_chrom=chrY&hgg_start=90785500&hgg_end=90816464&hgg_type=knownGene&db=mm10&hgsid=1920644492_dMBWtAa75dxnVBVsaTcAHLCeLOll), *Gm47283* was documented as Y-linked gene. Consider the sex chromosome configuration in female mouse is XX, it's biologically impossible for a Y-linked gene to be upregulated in female group.
 
 ![**Figure 10:** Expression level of Kdm5d across 16 glial subclasses between sex, upregulated in male in 10 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subcalss (***: adjusted p < 0.001; ns: not significant)](figure/Kdm5d expression level whole glia.png)
 ![**Figure 11:** Expression level of Uty across 16 glial subclasses between sex, upregulated in male in 11 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subcalss (***: adjusted p < 0.001; ns: not significant)](figure/Uty expression level whole glia.png)
@@ -245,29 +245,27 @@ Conversely, other top 4 differentially expressed Y-linked gene (*Kdm5d*, *Eif2s3
 
 All five genes of interest (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) are located at the two telomeric ends of the Y chromosome. Among them, the four genes significantly upregulated in the male group (*Kdm5d*, *Eif2s3y*, *Uty*, and *Ddx3y*) are clustered in close proximity to one another at one telomeric end. Conversely, *Gm47283* is located in isolation at the opposite telomeric end
 
-![**Figure 16:** Schematic of human pseudoautosomal region (PAR) lighlighted in purple on each tip of sex chromosome](figure/pseudoautosomal_region.png)
+![**Figure 16:** Schematic of human pseudoautosomal region (PAR) highlighted in purple on each tip of sex chromosome](figure/pseudoautosomal_region.png)
 
 <br>
 
-Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mice ([Perry et al., 2001](https://doi.org/10.1101/gr.203001)). Genes residing within these regions undergo homologous pairing and recombination during meiosis like the rest of autosomes. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
+Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mouse ([Perry et al., 2001](https://doi.org/10.1101/gr.203001)). Genes residing within these regions undergo homologous pairing and recombination during meiosis like the rest of autosomes. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
 
 ## Reciprocal BLAST
 
-![**Figure 17:** Gm47283 Reciprocal BLAST result; The left panel is X-allele query; The right panel is Y-allel query; X and Y chromosome hit in both query were checked and visualized using graphical representation tool in BLAST website](figure/reciprocal_BLAST.png)
+![**Figure 17:** Gm47283 Reciprocal BLAST result; The left panel is X-allele query; The right panel is Y-allele query; X and Y chromosome hit in both query were checked and visualized using graphical representation tool in BLAST website](figure/reciprocal_BLAST.png)
 
 <br>
 
-The *Gm47283* X-allele query yielded two Y-chromosome hits within the top three hits, demonstrating an E-value of `0`, `98–99%` sequence identity, and `100%` query coverage. Conversely, the Y-allele query yielded three X-chromosome hits within the top 18 hits, also demonstrating an E-value of `0` and `97–98%` sequence identity. Among these X-chromosome hits, one exhibited `61%` query coverage, while the remaining two exhibited `~12%` query coverage. In both directions, the mapped sequences were nearly identical. The difference in query coverage indicates that the Y-allele is relatively large compared to the X-allele. This size difference is verified by the graphical visualization, which reveals multiple truncation when map Y-allele to X-allele.
+The *Gm47283* X-allele query yielded two Y-chromosome hits within the top three hits, demonstrating an E-value of `0`, `98–99%` sequence identity, and `100%` query coverage. Conversely, the Y-allele query yielded three X-chromosome hits within the top 18 hits, also demonstrating an E-value of `0` and `97–98%` sequence identity. Among these X-chromosome hits, one exhibited `61%` query coverage, while the remaining two exhibited `~12%` query coverage. In both directions, the mapped sequences were nearly identical. The difference in query coverage indicates that the Y-allele is relatively large compared to the X-allele. This size difference is verified by the graphical visualization, which reveals multiple truncations when mapping Y-allele to X-allele.
 
-![**Figure 18:** Gm47283 interspecies BLAST result; The left panel is X-allele query; The right panel is Y-allel query; Human chromosome 21 hits both query were checked and visualized using graphical representation tool in BLAST website](figure/mice_to_human_BLAST.png)
+![**Figure 18:** Gm47283 interspecies BLAST result; The left panel is X-allele query; The right panel is Y-allele query; Human chromosome 21 hits both query were checked and visualized using graphical representation tool in BLAST website](figure/mice_to_human_BLAST.png)
 
 <br>
 
 The interspecies BLAST analysis revealed sequences similarity to *Gm47283* located on human chromosome 21. The Y-allele query yielded five human chromosome 21 hits within the top five hits, demonstrating an E-value of `0`, `93–97%` sequence identity, and `12~20%` query coverage. The X-allele query yielded ten human chromosome 21 hits within the top ten hits, demonstrating an E-values ranging from `1e-43` to `1e-61`, `81–90%` sequence identity, and `7~12%` query coverage. The graphical representation indicates extensive fragmentation and truncation in both queries. The combination of high sequence identity, low query coverage, and extensive truncation implies the existence of a human paralog of *Gm47283* residing on chromosome 21.
 
 # Discussion
-
-[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) conducted clustering using unpublished, in-house developed R package `scrattch.bigcat (v.0.0.1)` (https://github.com/AllenInstitute/scrattch.bigcat), which is a sub-package of `scrattch` package (https://alleninstitute.github.io/scrattch/) optimized for extremely large single-cell datasets by supporting parallel computing and in-disk data access. However, because [scrattch.bigcat (v.0.0.1)](https://github.com/AllenInstitute/scrattch.bigcat) wasn't formally released, it was poorly documented and failed to execute reliably within the local computational environment despite extensive troubleshooting. Thus, an alternative sub-package of [scrattch](https://alleninstitute.github.io/scrattch/), `scrattch.hicat` (https://github.com/AllenInstitute/scrattch.hicat), was utilized. [scrattch.hicat](https://github.com/AllenInstitute/scrattch.hicat) doesn't support parallel computing and in-disk data access, but provides better documentation.
 
 ## Read Mapping Algorithm Assessment
 
@@ -279,14 +277,44 @@ A review of the STAR algorithmic architecture indicates that it employs a local 
 
 ## Hypothesis validation
 
-...
+To validate the proposed Gm47283 mismapping hypothesis, we propose the following computational (dry) and experimental (wet) methodologies.
+
+Computational (Dry) Validations:
+
+-    X and Y Allele Pairwise Alignment: Conduct more accurate, localized pairwise alignment between the Gm47283 X and Y alleles to complement reciprocal BLAST result. Since BLAST is finding similar sequence among a gigantic database, there are some algorithmic compensation made such as small seeding size and selective extension to balance accuracy with efficiency.
+
+-    Isoform-to-Allele Pairwise Alignment: Align known X-allele isoforms against two genomic allele sequences to find if there exist an isoform aligned non-linearly against X-allele but linearly against Y-allele. This meant to directly find hypothetical isoform from known X-allele isoforms.
+
+-    Re-mapping to an X-only Reference Genome: Exclude Y chromosome from reference genome and re-aligning the raw female reads to this X-only Reference Genome. If the hypothesis is true, X-only reference genome will force any ambiguous PAR reads, including the hypothetical *Gm47283* isoform, to their true biological origin on the X chromosome. Thus the corresponding X-allele count will drastically increase when comparing to Y-contained count.
+
+Experimental (Wet) Validation:
+
+-    Fluorescence In Situ Hybridization (FISH): Utilizing fluorescent probes targeting the *Gm47283* transcript co-stained with X and Y chromosome DNA paints in male HPF tissue. If the hypothesis is true, two fluorophores should be observed in male tissue since both X and Y allele is transcribing *Gm47283*.
 
 ## Pseudoautosomal region
 
-...
+The identification of this mapping artifact exposes a technical limitation, standard short-read scRNA-seq is not a suitable tool to study pseudoautosomal regions (PARs). Because short-read alignment algorithms can't distinguish the true chromosomal origins across highly similar sequences, thus making the corresponding count matrix unreliable.
+
+This realization also prompts two interesting questions for future investigations:
+
+-    **Are there other genomic regions similar to the pseudoautosomal region?** It is necessary to investigate whether there are other highly homologous loci where a spliced isoform transcribed non-linearly from one allele can be mapped linearly to a different allele. Identifying such regions is critical for allele research utilizing scRNA-seq, allowing researchers flag and be aware of unreliable genomic region.
+
+-    **Is there anything special about the hypothetical isoform compared to other isoforms?** Consider this isoform can be transcribed from both X and Y allele despite allele's truncation difference, it implies that the resulting isoform is biologically important for both male and female.
 
 ## Cell type deconvolution
 
-...
+The robustness of cell type deconvolution relies on the accuracy of the underlying gene expression matrix. Inherently, a problematic count matrix will yield problematic cell type annotations. However, the exact extent to which this specific alignment artifact impacts global clustering remains uncertain. Because clustering algorithms compute cellular identity based on tens of thousands of genes simultaneously, a single or small number of mismapped genes may lack the statistical weight to alter a cluster.
+
+![**Figure 20:** Histogram of number of significant age associated DEGs among subclasses and supertypes from [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8); Y-axis is the number of DEGs; X-axis is subclasses or supertypes; The red box indicate Gm47283 ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8), figure 1h)](figure/Allen_gm47283.jpg)
+
+<br>
+
+Nevertheless, this mapping artifact undeniably affects downstream differential expression analyses, generating false positive and false negative markers. For example, as illustrated in Figure 20, the original study by [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8) classified *Gm47283* as a common aging-associated DEGs. Our analysis, however, reveals *Gm47283* has been mismapped.
+
+Ultimately, this computational flaw highlights that robust cell-type annotation cannot exist without evaluating biological metadata alongside algorithmic assumptions. It is imperative to include sex as a critical, biological variable in future scRNA-seq research. Without stratify groups by sex may result in significant false negative and false positive conclusion.
+
+## Insufficient package documentation
+
+[Jin et al (2025)](https://doi.org/10.1038/s41586-024-08350-8) conducted clustering using unpublished, in-house developed R package `scrattch.bigcat (v.0.0.1)` (https://github.com/AllenInstitute/scrattch.bigcat), which is a sub-package of `scrattch` package (https://alleninstitute.github.io/scrattch/) optimized for extremely large single-cell datasets by supporting parallel computing and in-disk data access. However, because [scrattch.bigcat (v.0.0.1)](https://github.com/AllenInstitute/scrattch.bigcat) wasn't formally released, it was poorly documented and failed to execute reliably within the local computational environment despite extensive troubleshooting. Thus, an alternative sub-package of [scrattch](https://alleninstitute.github.io/scrattch/), `scrattch.hicat` (https://github.com/AllenInstitute/scrattch.hicat), was utilized in this project. [scrattch.hicat](https://github.com/AllenInstitute/scrattch.hicat) doesn't support parallel computing and in-disk data access, but provides better documentation.
 
 # References {#references}
