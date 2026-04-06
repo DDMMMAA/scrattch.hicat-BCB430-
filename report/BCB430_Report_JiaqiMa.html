@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jiaqi Ma" />
 
-<meta name="date" content="2026-04-05" />
+<meta name="date" content="2026-04-06" />
 
 <title>The role of pseudo-autosomal region reads mapping in sex- and age-aware glia cell-type deconvolution in scRNA-seq</title>
 
@@ -1591,7 +1591,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">The role of pseudo-autosomal region reads mapping in sex- and age-aware glia cell-type deconvolution in scRNA-seq</h1>
 <h4 class="author">Jiaqi Ma</h4>
-<h4 class="date">2026-04-05</h4>
+<h4 class="date">2026-04-06</h4>
 
 </div>
 
@@ -1615,14 +1615,11 @@ caption-side: bottom;
 <p><br></p>
 <p>Single-cell RNA sequencing (scRNA-seq) has transformed our ability to characterize cellular heterogeneity. Within current bioinformatic pipelines, clustering and cell type annotation represent critical steps for translating raw count matrices into biologically meaningful information (<a href="https://doi.org/10.52601/bpr.2022.210041">He et al., 2022</a>). Currently, researchers rely on two primary methodologies for cell-type annotation: manually identifying populations via established marker genes, or automatically mapping the data against a reference transcriptome (<a href="https://doi.org/10.52601/bpr.2022.210041">He et al., 2022</a>; <a href="https://doi.org/10.1038/s41576-023-00586-w">Heumos et al., 2023</a>). Marker-gene-based annotation is biologically robust but relatively slow and typically yields low-resolution classifications. Conversely, reference-based mapping can rapidly generate high-resolution annotations. The critical caveat is that the robustness of these automated annotations depends heavily on the robustness of the selected reference transcriptome.</p>
 <p>One widely used reference transcriptome is the <a href="https://mouse.brain-map.org/">Allen brain atlas</a>. In their 2025 update (<a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al., 2025</a>), sequenced 108 mice (44 aged, 64 adult; 51 female, 57 male), yielding approximately 2 million cells after quality control, covering ~35% of the whole mouse brain volume, making it the highest-coverage atlas at the time of publication. While this atlas provides an invaluable resource, we suspect that standard clustering pipelines, including those utilized by the Allen Brain Atlas, are vulnerable to two major computational flaws. First, performing global clustering without stratifying by fundamental biological variables (such as sex, age, and region) risks masking state-specific transcriptional differences, diluting biologically important signals and generating false negatives. Second, algorithms that favour high-resolution clustering may produce over-clustering, mathematically generating small, rare clusters from noise that can be interpreted as “novel” cell types, resulting in false positive.</p>
-<p>To rigorously test the robustness of Allen brain atlas’s cell type annotation, this project evaluates the glial cell population, known to be heterogeneous and transcriptionally dynamic (<a href="https://doi.org/10.1007/s10571-021-01159-3">Sun et al., 2021</a>; <a href="https://doi.org/10.1016/j.neuron.2022.03.008">Sadick et al., 2022</a>), making them an ideal population to exposing annotation limitations. Three biological variables known to drive transcriptomic shifts (sex, age, and region) were selected. Sex is known to drive transcriptomic changes due to genetic and hormonal differences (<a href="https://doi.org/10.1016/j.physbeh.2022.114038">Szadvári et al., 2023</a>), with studies reporting stronger microglial activation in female Alzheimer’s disease (AD) cases (<a href="https://doi.org/10.1016/j.molmed.2019.05.001">Kodama &amp; Gan, 2019</a>). Age is the primary risk factor for neurodegenerative diseases, driving common transcriptomic changes that include chronic inflammation and mitochondrial dysfunction (<a href="https://doi.org/10.1038/s41582-019-0244-7">Hou et al., 2019</a>; <a href="https://doi.org/10.1016/j.cmet.2018.05.011">Mattson &amp; Arumugam, 2018</a>). Finally, the hippocampal formation (HPF) was selected as the region of interest because it is highly vulnerable and frequently affected in various neurodegenerative diseases (<a href="https://doi.org/10.3390/ijms25041991">Davidson &amp; Stevenson, 2024</a>), while also exhibiting sex-specific functional differences (<a href="https://doi.org/10.1038/s41386-018-0208-4">Yagi &amp; Galea, 2018</a>).</p>
+<p>To rigorously test the robustness of Allen brain atlas’s cell type annotation, this project evaluates the glial cell population, known to be heterogeneous and transcriptionally dynamic (<a href="https://doi.org/10.1007/s10571-021-01159-3">Sun et al., 2021</a>; <a href="https://doi.org/10.1016/j.neuron.2022.03.008">Sadick et al., 2022</a>), making them an ideal population to exposing annotation limitations. Three biological variables known to drive transcriptomic shifts (sex, age, and region) were selected. Sex is known to drive transcriptomic changes due to genetic and hormonal differences (<a href="https://doi.org/10.1016/j.physbeh.2022.114038">Szadvári et al., 2023</a>), with studies reporting stronger microglial activation in female Alzheimer’s disease (AD) cases (<a href="https://doi.org/10.1016/j.molmed.2019.05.001">Kodama &amp; Gan, 2019</a>). Age is the primary risk factor for neurodegenerative diseases, driving common transcriptomic changes that include chronic inflammation and mitochondrial dysfunction (<a href="https://doi.org/10.1038/s41582-019-0244-7">Hou et al., 2019</a>; <a href="https://doi.org/10.1016/j.cmet.2018.05.011">Mattson &amp; Arumugam, 2018</a>). Finally, the hippocampal formation (HPF) was selected as the region of interest because it is highly vulnerable and frequently affected in various neurodegenerative diseases (<a href="https://doi.org/10.3390/ijms25041991">Davidson &amp; Stevenson, 2024</a>), while also exhibiting sex-specific functional differences (<a href="https://doi.org/10.1038/s41386-018-0208-4">Yagi &amp; Galea, 2019</a>).</p>
 </div>
 <div id="objective" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Objective</h1>
-<ul>
-<li><strong>Biological Variance:</strong> What are the sex- and age-related transcriptomic signatures defining the non-neuronal (glial) populations’ identity within the Hippocampal formation (HPF)?</li>
-<li><strong>The Transcriptomic Anomaly:</strong> Why is <em>Gm47283</em>, a Y-linked gene, significantly upregulated in the transcriptomic profiles of female <em>Mus musculus</em>?</li>
-</ul>
+<p>First, explore sex- and age-related transcriptomic signatures defining the non-neuronal (glial) populations’ identity within the Hippocampal formation (HPF). Second, investigate a profound transcriptomic anomaly: determining Why <em>Gm47283</em>, a Y-linked gene, significantly upregulated in the transcriptomic profiles of female <em>Mus musculus</em>.</p>
 </div>
 <div id="method" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Method</h1>
@@ -1633,32 +1630,13 @@ caption-side: bottom;
 <div id="animal-model" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Animal Model</h2>
 <p>Mouse breeding and tissue sampling were conducted by <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al., (2025)</a>.</p>
-<p>The dataset derives from 108 wild-type C57BL/6J mice, explicitly stratified by age and sex:</p>
-<ul>
-<li><p>Aged group: 44 mice (20 female, 24 male) euthanized at postnatal days (P) 540–553 (~18 months).</p></li>
-<li><p>Adult group: 64 mice (31 female, 33 male) euthanized at P53–69 (~2 months).</p></li>
-</ul>
-<p>Animals presenting with gross health abnormalities were excluded prior to sequencing, and tissue collections were standardized within a 3-hour Zeitgeber window to minimize circadian variance. Notably, while the dataset is highly stratified by sex, the oestrous cycles of the female mice were not tracked during tissue collection. This is a relevant biological limitation when attempting to isolate baseline sex-driven transcriptomic variance, as oestrous cycle phase can substantially influence hippocampal gene expression (<a href="https://doi.org/10.1038/s41386-018-0208-4">Yagi &amp; Galea, 2018</a>).</p>
+<p>The dataset derives from 108 wild-type C57BL/6J mice, explicitly stratified by age and sex. Specifically, consists of 44 aged mice (20 female, 24 male) euthanized between postnatal days (P) 540 and 553 (approximately 18 months), alongside 64 adult mice (31 female, 33 male) euthanized between P53 and 69 (approximately 2 months).</p>
+<p>Animals presenting with gross health abnormalities were excluded prior to sequencing, and tissue collections were standardized within a 3-hour Zeitgeber window to minimize circadian variance. Notably, while the dataset is highly stratified by sex, the oestrous cycles of the female mice were not tracked during tissue collection. This is a relevant biological limitation when attempting to isolate baseline sex-driven transcriptomic variance, as oestrous cycle phase can substantially influence hippocampal gene expression (<a href="https://doi.org/10.1038/s41386-018-0208-4">Yagi &amp; Galea, 2019</a>).</p>
 </div>
 <div id="data-source" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Data Source</h2>
-<ul>
-<li>Single cell RNA-seq (scRNA-seq)</li>
-<li>Original paper: <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al., 2025</a></li>
-<li>Deposited in <a href="https://assets.nemoarchive.org/dat-61kfys3">Neuroscience Multi-omic Data Archive (NeMO)</a></li>
-<li>Download url: <a href="https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar" class="uri">https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar</a></li>
-<li>Note: Only Hippocampal formation (HPF) data were subjected to this analysis</li>
-</ul>
-<p><a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al., (2025)</a> sequenced brain sample collected from 44 aged mice (20 female, 24 male) and 64 young adult mice (31 female, 33 male) using Illumina NovaSeq6000 sequencing system (<a href="https://doi-org.myaccess.library.utoronto.ca/10.1007/978-1-0716-1099-2_2">Modi et al., 2021</a>) and 10X Genomics CellRanger pipeline (v.6.0.0) to map sequenced reads to <strong>mm10/gencode.vM23</strong> reference genome (<a href="https://doi-org.myaccess.library.utoronto.ca/10.1093/nar/gky955">Frankish et al., 2019</a>). The dataset contains <strong>2,777,165</strong> cells categorized across 6 major regions and 16 broad regions.</p>
-<p>The 6 major regions were:</p>
-<ol style="list-style-type: decimal">
-<li>Isocortex</li>
-<li>Hippocampal formation (HPF)</li>
-<li>Hypothalamus (HY)</li>
-<li>Cerebral nuclei (CNU)</li>
-<li>Midbrain</li>
-<li>Hindbrain</li>
-</ol>
+<p>The single-cell RNA sequencing (scRNA-seq) data utilized in this study was originally generated by <a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al., (2025)</a>. The complete dataset is publicly deposited in the <a href="https://assets.nemoarchive.org/dat-61kfys3">Neuroscience Multi-omic Data Archive (NeMO)</a> and was retrieved via their direct archive <a href="https://data.nemoarchive.org/other/grant/Mouse_Aging/zeng/transcriptome/scell/10x_v3/mouse/processed/counts/Mouse_Aging_10Xv3_normalized_20241115.h5ad.tar">link</a>. Note that only the cellular data specifically derived from the Hippocampal formation (HPF) was extracted and subjected to downstream analysis.</p>
+<p><a href="https://doi.org/10.1038/s41586-024-08350-8">Jin et al., (2025)</a> sequenced brain sample collected from 44 aged mice (20 female, 24 male) and 64 young adult mice (31 female, 33 male) using Illumina NovaSeq6000 sequencing system (<a href="https://doi-org.myaccess.library.utoronto.ca/10.1007/978-1-0716-1099-2_2">Modi et al., 2021</a>) and 10X Genomics CellRanger pipeline (v.6.0.0) to map sequenced reads to <strong>mm10/gencode.vM23</strong> reference genome (<a href="https://doi-org.myaccess.library.utoronto.ca/10.1093/nar/gky955">Frankish et al., 2019</a>). The dataset contains <strong>2,777,165</strong> cells categorized across 16 subregions within six major regions: the isocortex, hippocampal formation (HPF), hypothalamus (HY), cerebral nuclei (CNU), midbrain, and hindbrain.</p>
 </div>
 <div id="packages-usage" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Packages Usage</h2>
@@ -1780,22 +1758,7 @@ caption-side: bottom;
 )</div>
 </div>
 <p><br></p>
-<p>The downloaded data is in <code>.h5ad</code>, popular single-cell transcriptome format in Python ecosystem. <a href="https://doi.org/10.1101/2025.08.18.669052">annadataR</a> was utilized to read <code>.h5ad</code> file into R and converted to <code>Seurat object</code>, basic functional unit in <a href="https://satijalab.org/seurat/">Seurat</a> pipeline. Then subset the whole HPF dataset by neuro/glia, age, sex, sub-region (ROI) to the following subsets for the sake of data management.</p>
-<ol style="list-style-type: decimal">
-<li><code>SeuratObj</code> (Whole HPF)</li>
-<li><code>subset_obj</code> (Random 3k subset of <code>SeuratObj</code>)</li>
-<li><code>neuro_seuratobj</code> (Neuron)</li>
-<li><code>Non_neuro_seuratobj</code> (Glia)</li>
-<li><code>zero_doublet_seuratobj</code> (Cells with zero doublet score)</li>
-<li><code>male_seuratobj</code> (male)</li>
-<li><code>female_seuratobj</code> (female)</li>
-<li><code>adult_seuratobj</code> (adult)</li>
-<li><code>aged_seuratobj</code> (aged)</li>
-<li><code>ENT_seuratobj</code> (Entorhinal cortex)</li>
-<li><code>HIP_seuratobj</code> (Hippocampus)</li>
-<li><code>HIP_CA_seuratobj</code> (Hippocampus, Cornu Ammonis)</li>
-<li><code>PAR_POST_PRE_SUB_ProS_seuratobj</code> (Hippocampal-subicular)</li>
-</ol>
+<p>The downloaded data is in <code>.h5ad</code>, popular single-cell transcriptome format in Python ecosystem. <a href="https://doi.org/10.1101/2025.08.18.669052">annadataR</a> was utilized to read <code>.h5ad</code> file into R and converted to <code>Seurat object</code>, basic functional unit in <a href="https://satijalab.org/seurat/">Seurat</a> pipeline. Then subset the whole HPF dataset by neuro/glia, age, sex, sub-region (ROI) subsets for the sake of data management.</p>
 </div>
 <div id="exploratory-data-analysis" class="section level2" number="3.6">
 <h2><span class="header-section-number">3.6</span> Exploratory Data Analysis</h2>
@@ -1974,25 +1937,12 @@ caption-side: bottom;
 <div id="hypothesis-validation" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Hypothesis validation</h2>
 <p>To validate the proposed Gm47283 mismapping hypothesis, we propose the following computational (dry) and experimental (wet) methodologies.</p>
-<p>Computational (Dry) Validations:</p>
-<ul>
-<li><p>X and Y Allele Pairwise Alignment: Conduct more accurate, localized pairwise alignment between the Gm47283 X and Y alleles to complement reciprocal BLAST result. Because BLAST searches for similar sequences across a large database, it employs algorithmic trade-offs (including small seed sizes and selective extension) to balance sensitivity with computational efficiency.</p></li>
-<li><p>Isoform-to-Allele Pairwise Alignment: Align known X-allele isoforms against two genomic allele sequences to find if there exist an isoform aligned non-linearly against X-allele but linearly against Y-allele. This would directly test whether the hypothesised mismapping isoform exists among known X-allele transcripts.</p></li>
-<li><p>Re-mapping to an X-only Reference Genome: Exclude Y chromosome from reference genome and re-aligning the raw female reads to this X-only Reference Genome. If the hypothesis is true, X-only reference genome will force any ambiguous PAR reads, including the hypothetical <em>Gm47283</em> isoform, to their true biological origin on the X chromosome. Thus the corresponding X-allele count will drastically increase when comparing to Y-contained count.</p></li>
-</ul>
-<p>Experimental (Wet) Validation:</p>
-<ul>
-<li>Fluorescence In Situ Hybridization (FISH): Utilizing fluorescent probes targeting the <em>Gm47283</em> transcript co-stained with X and Y chromosome DNA paints in male HPF tissue. If the hypothesis is true, two fluorophores should be observed in male tissue since both X and Y allele is transcribing <em>Gm47283</em>.</li>
-</ul>
+<p>For the computational validations, the first step is an X and Y allele pairwise alignment. Conducting a more accurate, localized pairwise alignment between the <em>Gm47283</em> X and Y alleles will complement the reciprocal BLAST results. Because BLAST searches for similar sequences across a large database, it employs algorithmic trade-offs (including small seed sizes and selective extension) to balance sensitivity with computational efficiency. Next, an isoform-to-allele pairwise alignment can be performed. Aligning known X-allele isoforms against the two genomic allele sequences will determine if there exists an isoform that aligns non-linearly against the X-allele but linearly against the Y-allele. This directly tests whether the hypothesized mismapping isoform exists among known X-allele transcripts. Finally, re-map the raw female reads to an X-only reference genome. By excluding the Y chromosome from the reference genome and re-aligning the reads to this X-only reference genome, the hypothesis can be tested. If the hypothesis is true, the X-only reference genome will force any ambiguous PAR reads, including the hypothetical <em>Gm47283</em> isoform, to their true biological origin on the X chromosome. Thus, the corresponding X-allele count will drastically increase when compared to the Y-contained counts.</p>
+<p>For the experimental (wet) validation, Fluorescence In Situ Hybridization (FISH) can be employed. This methodology utilizes fluorescent probes targeting the <em>Gm47283</em> transcript co-stained with X and Y chromosome DNA paints in male HPF tissue. If the hypothesis is true, two fluorophores should be observed in the male tissue since both the X and Y alleles are transcribing <em>Gm47283</em>.</p>
 </div>
 <div id="pseudoautosomal-region" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> Pseudoautosomal region</h2>
-<p>The identification of this mapping artifact exposes a technical limitation, standard short-read scRNA-seq is not a suitable tool to study pseudoautosomal regions (PARs). Because short-read alignment algorithms can’t distinguish the true chromosomal origins across highly similar sequences, thus making the corresponding count matrix unreliable.</p>
-<p>This realization also prompts two interesting questions for future investigations:</p>
-<ul>
-<li><p><strong>Are there other genomic regions similar to the pseudoautosomal region?</strong> It is necessary to investigate whether there are other highly homologous loci where a spliced isoform transcribed non-linearly from one allele can be mapped linearly to a different allele. Identifying such regions is critical for allele research utilizing scRNA-seq, allowing researchers flag and be aware of unreliable genomic region.</p></li>
-<li><p><strong>Is there anything special about the hypothetical isoform compared to other isoforms?</strong> Consider this isoform can be transcribed from both X and Y allele despite allele’s truncation difference, it implies that the resulting isoform is biologically important for both male and female.</p></li>
-</ul>
+<p>The identification of this mapping artifact exposes a critical technical limitation: standard short-read scRNA-seq is not a suitable tool to study pseudoautosomal regions (PARs). Because short-read alignment algorithms cannot distinguish true chromosomal origins across highly similar sequences, the corresponding count matrices for these loci are unreliable. This realization prompts two vital questions for future investigations. First, it is necessary to ask whether there are other genomic regions similar to the pseudoautosomal region—specifically, highly homologous loci where a spliced isoform transcribed non-linearly from one allele can be erroneously mapped linearly to a different allele. Identifying such regions is critical for allele-specific research utilizing scRNA-seq, as it allows researchers to systematically flag and compensate for unreliable genomic coordinates. Second, investigate whether there is anything uniquely significant about the hypothetical isoform compared to other isoforms. Considering that this isoform can be actively transcribed from both the X and Y alleles despite their structural truncation differences, it strongly implies that the resulting transcript is biologically indispensable for both males and females.</p>
 </div>
 <div id="cell-type-deconvolution" class="section level2" number="5.4">
 <h2><span class="header-section-number">5.4</span> Cell type deconvolution</h2>
