@@ -148,13 +148,13 @@ To determine whether the murine *Gm47283* gene possesses conserved evolutionary 
 
 # Result
 
-## Data loading and sub-setting
+## Data Loading and Sub-setting
 
 The Post-QC normalized scRNA-seq data obtained from the [Neuroscience Multi-omic Data Archive (NeMO)](https://assets.nemoarchive.org/dat-61kfys3) contained **1,999,976** cells. After sub-setting to non-neuronal cells in the HPF, **121,282** cells (~6.06%) remained.
 
 ## Exploratory Data Analysis
 
-There were 16 subclasses in the dataset, dominated by `Astro-TE NN` (43.7%). There were 4 sub-HPF region (denote as region of interest, ROI in figure 5) revealed from dataset. However, [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8) only document three ROI as shown in figure 3, `HIP` wasn't documented. Judged by the same prefix of `HIP` and `HIP - CA` It was supposed to be part of `HIP - CA`. 
+There were 16 subclasses in the dataset, dominated by `Astro-TE NN` (43.7%). There were 4 sub-HPF region (denote as region of interest, ROI in figure 5) revealed from dataset. However, [Jin et al., (2025)](https://doi.org/10.1038/s41586-024-08350-8) only document three ROI as shown in figure 3, `HIP` wasn't documented. Judged by the same prefix of `HIP` and `HIP - CA` It was supposed to be part of `HIP - CA`. 
 
 The sex distribution was slightly biased toward males, and the age distribution was biased toward aged group.
 
@@ -184,7 +184,7 @@ Comparing raw DEG counts with normalized counts, the overall patterns were prese
 
 Among the top 15 DEGs identified in each subclass during sex comparisons, *Gm47283* was significantly upregulated in the female group across 10 of the 16 subclasses. Although the magnitude of the fold change was modest, the statistical significance of this differential expression was extremely high. Interestingly, according to [UCSC Genome Browser](https://www.genome.ucsc.edu/cgi-bin/hgGene?hgg_gene=ENSMUST00000177671.7&hgg_prot=uc292van.1&hgg_chrom=chrY&hgg_start=90785500&hgg_end=90816464&hgg_type=knownGene&db=mm10&hgsid=1920644492_dMBWtAa75dxnVBVsaTcAHLCeLOll), *Gm47283* was documented as Y-linked gene. Given that the sex chromosome configuration in female mouse is XX, it's biologically implausible for a Y-linked gene to show upregulation in female group.
 
-![**Figure 9:** Expression level of Gm47283 across 16 glial subclass between sex, upregulated in female in 10 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subclass (***: adjusted p < 0.001; ns: not significant)](figure/Gm47283 expression level whole glia.png)
+![**Figure 9:** Expression level of *Gm47283* across 16 glial subclass between sex, upregulated in female in 10 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subclass (***: adjusted p < 0.001; ns: not significant)](figure/Gm47283 expression level whole glia.png)
 
 <br>
 
@@ -198,17 +198,17 @@ Conversely, the other four differentially expressed Y-linked gene (*Kdm5d*, *Eif
 
 ![**Figure 13:** Expression level of Eif2s3y across 16 glial subclasses between sex, upregulated in male in 11 out of 16 subclalsses; Y-axis is the normalized expression level; X-axis is all 16 glial subclass separated by sex; Significance level are denoted above each subcalss (***: adjusted p < 0.001; ns: not significant)](figure/Eif2s3y expression level whole glia.png)
 
-## Synteny exploration
+## Synteny Exploration
 
 All five genes of interest (*Kdm5d*, *Eif2s3y*, *Uty*, *Ddx3y*, and *Gm47283*) are located at the two telomeric ends of the Y chromosome. Among them, the four genes significantly upregulated in the male group (*Kdm5d*, *Eif2s3y*, *Uty*, and *Ddx3y*) are clustered in close proximity to one another at one telomeric end. Conversely, *Gm47283* is located in isolation at the opposite telomeric end
 
-![**Figure 14:** Synteny of Gm47283 on GRCm38/mm10 reference genome; The red box on top indicate the location on Y chromosome](figure/chrY_back.png)
+![**Figure 14:** Synteny of *Gm47283* on GRCm38/mm10 reference genome; The red box on top indicate the location on Y chromosome](figure/chrY_back.png)
 
 ![**Figure 15:** Synteny of top 4 Y-linked DEG upregulated in male on GRCm38/mm10 reference genome; The red box on top indicate the location on Y chromosome](figure/chrY_front.png)
 
 <br>
 
-Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mouse ([Perry et al., 2001](https://doi.org/10.1101/gr.203001)). Genes within PARs undergo homologous pairing and recombination during meiosis, similarly to autosomal loci. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
+Existing literature indicates that the telomeric ends of the X and Y chromosomes are defined as pseudoautosomal regions (PARs) in both human ([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991)), and mouse ([Perry et al., 2001](https://doi.org/10.1101/gr.203001)). Genes within PARs undergo homologous pairing and recombination during meiosis, similarly to autosomal loci. Consequently, genes within the pseudoautosomal regions are homologous and share high sequence similarity between the X and Y chromosomes.
 
 ![**Figure 16:** Schematic of human pseudoautosomal region (PAR) highlighted in purple on each tip of sex chromosome](figure/pseudoautosomal_region.png)
 
@@ -216,15 +216,13 @@ Existing literature indicates that the telomeric ends of the X and Y chromosomes
 
 The *Gm47283* X-allele query yielded two Y-chromosome hits within the top three hits, demonstrating an E-value of 0, 98~99% sequence identity, and 100% query coverage. Conversely, the Y-allele query yielded three X-chromosome hits within the top 18 hits, also demonstrating an E-value of 0 and 97~98% sequence identity. Among these X-chromosome hits, one exhibited 61% query coverage, while the remaining two exhibited ~12% query coverage. In both directions, the mapped sequences were nearly identical. The difference in query coverage indicates that the Y-allele is relatively large compared to the X-allele. This size difference is verified by the graphical visualization, which reveals multiple truncations when mapping Y-allele to X-allele.
 
-![**Figure 17:** Gm47283 Reciprocal BLAST result; The left panel is X-allele query; The right panel is Y-allele query; X and Y chromosome hit in both query were checked and visualized using graphical representation tool in BLAST website](figure/reciprocal_BLAST.png)
+![**Figure 17:** *Gm47283* Reciprocal BLAST result; The left panel is X-allele query; The right panel is Y-allele query; X and Y chromosome hit in both query were checked and visualized using graphical representation tool in BLAST website](figure/reciprocal_BLAST.png)
 
 <br>
 
 The interspecies BLAST analysis revealed sequences similarity to *Gm47283* located on human chromosome 21. The Y-allele query yielded five human chromosome 21 hits within the top five hits, demonstrating an E-value of 0, 93~97% sequence identity, and 12~20% query coverage. The X-allele query yielded ten human chromosome 21 hits within the top ten hits, demonstrating an E-values ranging from 1e-43 to 1e-61, 81~90% sequence identity, and 7~12% query coverage. The graphical representation indicates extensive fragmentation and truncation in both queries. The combination of high sequence identity, low query coverage, and extensive truncation implies the existence of a human paralog of *Gm47283* residing on chromosome 21.
 
-![**Figure 18:** Gm47283 interspecies BLAST result; The left panel is X-allele query; The right panel is Y-allele query; Human chromosome 21 hits both query were checked and visualized using graphical representation tool in BLAST website](figure/mice_to_human_BLAST.png)
-
-# Discussion
+![**Figure 18:** *Gm47283* interspecies BLAST result; The left panel is X-allele query; The right panel is Y-allele query; Human chromosome 21 hits both query were checked and visualized using graphical representation tool in BLAST website](figure/mice_to_human_BLAST.png)
 
 ## Read Mapping Algorithm Assessment
 
@@ -232,34 +230,52 @@ To evaluate the potential for algorithmic artifacts contributing to the potentia
 
 The STAR aligner employs a local scoring model that penalises mismatches, insertions, and deletions proportionally. While STAR natively permits user-defined handling of multimapped reads (reads that mapped to multiple genomic loci with equal scoring confidence), the standard Cell Ranger pipline discards all multimapped reads during quality control ([10X Genomics Q&A documentation](https://kb.10xgenomics.com/s/article/4409878456077-How-to-extract-multi-mapped-reads-from-Cell-Ranger-BAM-files)). This algorithmic parameter was identified as a potential vulnerability when evaluating highly homologous loci, as true reads originating from the *Gm47283* X and Y alleles would likely be discarded.
 
-![**Figure 19:** Proposed mechanism of Gm47283 reads mismapping. The schematic illustrates a hypothetical algorithmic error during the reads mapping phase of *Gm47283*. The true genomic locus of the Gm47283 X-allele (top) consists of defined exonic regions (boxes) separated by intronic sequences (lines). Transcription and splicing produce a mature isoform devoid of introns (middle). The hypothesis proposes that this processed, continuous isoform was mapped to continuous Y-allele (bottom) under linear assumption of mapping algorithm, resulting in a mismapping. (created in https://BioRender.com)](figure/hypothetical_mismapping.png)
+# Discussion
 
-## Hypothesis validation
+This project rigorously evaluated the robustness of cell annotation from Allen brain atlas ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8)), utilizing the non-neuronal (glial) populations of the Hippocampal Formation (HPF) to expose potential limitations. The experimental workflow involved clustering the HPF glial subset, executing multi-axial differential gene expression (DGE) analyses across subregions (ROI), age, and biological sex, and investigating a profound sex-linked transcriptomic anomaly, *Gm47283*'s upregulation in female. By systematically stratifying the data by fundamental biological variables, this study highlights how unresolved genomic and algorithmic complexities can introduce critical transcriptomic biases into scRNA-seq analyses.
 
-To validate the proposed Gm47283 mismapping hypothesis, we propose the following computational (dry) and experimental (wet) methodologies.
+## Region, Age, and Sex Drives HPF Glial Heterogeneity
+
+Our analysis revealed that within the HPF non-neuronal population, sub-regional location (ROI) drove the most profound transcriptomic variance, followed by age, while biological sex exerted the subtlest global effect (Figures 6~8). These variances align well with current neurobiological literature. Astrocytes are known to exhibit high regional heterogeneity, adapting locally to the distinct metabolic and synaptic demands of specific microenvironments, such as the entorhinal cortex versus the hippocampus ([Bocchi et al., 2025](https://doi.org/10.1038/s41593-025-01878-6), [Schroeder et al, 2025](https://doi.org/10.1016/j.neuron.2025.09.011)). Age is also an expected biological outcome, reflecting the chronic inflammatory shifts and metabolic dysfunction characteristic of aging glial populations ([Hou et al., 2019](https://doi.org/10.1038/s41582-019-0244-7); [Mattson & Arumugam, 2018](https://doi.org/10.1016/j.cmet.2018.05.011)).
+
+While sex contributed the least to global transcriptomic heterogeneity among the tested variables, multi-axial analysis effectively identified significant sex-specific markers. As expected, *Kdm5d*, *Eif2s3y*, *Uty*, and *Ddx3y* were exclusively expressed in males. However, the analysis also revealed a anomalous, significant upregulation of *Gm47283*, an annotated Y-linked gene, in female across 10 of 16 glial subclasses.
+
+## The Gm47283 Transcriptomic Anomaly
+
+### Characterization of Gm47283
+
+*Gm47283* is documented in [UCSC Genome Browser](https://www.genome.ucsc.edu/cgi-bin/hgGene?hgg_gene=ENSMUST00000177671.7&hgg_prot=uc292van.1&hgg_chrom=chrY&hgg_start=90785500&hgg_end=90816464&hgg_type=knownGene&db=mm10&hgsid=1920644492_dMBWtAa75dxnVBVsaTcAHLCeLOll), GRCm38/mm10 reference genome, as an isolated, Y-linked gene located at the telomeric end of the chromosome. Biologically, a Y-linked gene cannot be actively transcribed in a female (XX) organism. However, the multi-axial DGE analysis demonstrated its highly significant presence in female. Following the synteny exploration (Section 4.5) and the reciprocal BLAST analysis (Section 4.6), which confirmed near-identical sequence similarity (98~99%) between the *Gm47283* X and Y alleles, it became evident that the presence of *Gm47283* in female was not a biological phenomenon, but a computational artifact.
+
+### Pseudoautosomal Region (PAR) Mismapping Hypothesis and Literature Impact
+
+The telomeric ends of sex chromosomes contain pseudoautosomal regions (PARs), which undergo homologous recombination during meiosis and consequently share high sequence similarity ([Graves & Toder, 1998](https://doi.org/10.1093/hmg/7.13.1991), [Perry et al., 2001](https://doi.org/10.1101/gr.203001)). Because STAR aligner algorithms ([Dobin et al., 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104886)) operate on linear assumptions, they struggle to distinguish true chromosomal origins across highly similar sequences. We hypothesize that a mature, spliced isoform transcribed non-linearly from the X-allele is being erroneously mapped linearly to the continuous Y-allele by the STAR aligner ([Dobin et al., 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104886)).
+
+![**Figure 19:** Proposed mechanism of *Gm47283* reads mismapping. The schematic illustrates a hypothetical algorithmic error during the reads mapping phase of *Gm47283*. The true genomic locus of the *Gm47283* X-allele (top) consists of defined exonic regions (boxes) separated by intronic sequences (lines). Transcription and splicing produce a mature isoform devoid of introns (middle). The hypothesis proposes that this processed, continuous isoform was mapped to continuous Y-allele (bottom) under linear assumption of mapping algorithm, resulting in a mismapping. (created in https://BioRender.com)](figure/hypothetical_mismapping.png)
+
+<br>
+
+This mapping artifact exposes a technical vulnerability in the literature at large. *Gm47283* is unlikely to be the only gene suffering from this algorithmic flaw. Mismappings within PARs, or other highly similar loci between alleles assembled in such linear and non-linear fashion, systematically corrupt the underlying count matrices to certain extent. Inherently, a problematic count matrix yields biased clustering, cell type deconvolution, and generates false-positive and false-negative differential expression markers. This is directly evidenced in the original study by [Jin et al., (2025)](https://doi.org/10.1038/s41586-024-08350-8), where the failure to explicitly stratify by sex led to *Gm47283* being misidentified and published as a "age-associated DEG".
+
+![**Figure 20:** Histogram of number of significant age associated DEGs among subclasses and supertypes from [Jin et al., (2025)](https://doi.org/10.1038/s41586-024-08350-8); Y-axis is the number of DEGs; X-axis is subclasses or supertypes; The red box indicate *Gm47283* ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8), figure 1h)](figure/Allen_gm47283.jpg)
+
+## Future Directions
+
+To validate the proposed *Gm47283* mismapping hypothesis, we propose the following computational (dry) and experimental (wet) methodologies.
 
 For the computational validations, the first step is an X and Y allele pairwise alignment. Conducting a more accurate, localized pairwise alignment between the *Gm47283* X and Y alleles will complement the reciprocal BLAST results. Because BLAST searches for similar sequences across a large database, it employs algorithmic trade-offs (including small seed sizes and selective extension) to balance sensitivity with computational efficiency. Next, an isoform-to-allele pairwise alignment can be performed. Aligning known X-allele isoforms against the two genomic allele sequences will determine if there exists an isoform that aligns non-linearly against the X-allele but linearly against the Y-allele. This directly tests whether the hypothesized mismapping isoform exists among known X-allele transcripts. Finally, re-map the raw female reads to an X-only reference genome. By excluding the Y chromosome from the reference genome and re-aligning the reads to this X-only reference genome, the hypothesis can be tested. If the hypothesis is true, the X-only reference genome will force any ambiguous PAR reads, including the hypothetical *Gm47283* isoform, to their true biological origin on the X chromosome. Thus, the corresponding X-allele count will drastically increase when compared to the Y-contained counts.
 
 For the experimental (wet) validation, Fluorescence In Situ Hybridization (FISH) can be employed. This methodology utilizes fluorescent probes targeting the *Gm47283* transcript co-stained with X and Y chromosome DNA paints in male HPF tissue. If the hypothesis is true, two fluorophores should be observed in the male tissue since both the X and Y alleles are transcribing *Gm47283*.
 
-## Pseudoautosomal region
+In addition, it's also intereting to investigate whether there is anything uniquely significant about the hypothetical isoform compared to other isoforms. Considering that this isoform can be actively transcribed from both the X and Y alleles despite their structural truncation differences, it strongly implies that the resulting transcript is biologically indispensable for both males and females.
 
-The identification of this mapping artifact exposes a critical technical limitation: standard short-read scRNA-seq is not a suitable tool to study pseudoautosomal regions (PARs). Because short-read alignment algorithms cannot distinguish true chromosomal origins across highly similar sequences, the corresponding count matrices for these loci are unreliable. This realization prompts two vital questions for future investigations. First, it is necessary to ask whether there are other genomic regions similar to the pseudoautosomal region—specifically, highly homologous loci where a spliced isoform transcribed non-linearly from one allele can be erroneously mapped linearly to a different allele. Identifying such regions is critical for allele-specific research utilizing scRNA-seq, as it allows researchers to systematically flag and compensate for unreliable genomic coordinates. Second, investigate whether there is anything uniquely significant about the hypothetical isoform compared to other isoforms. Considering that this isoform can be actively transcribed from both the X and Y alleles despite their structural truncation differences, it strongly implies that the resulting transcript is biologically indispensable for both males and females.
+While the standard local linear assumption utilized by short-read aligners like STAR is computationally efficient and biologically valid for the vast majority of autosomal and non-PAR assemblies, it fundamentally fails within edge cases like PAR. To resolve this, future pipeline development can specifically tune PAR and sex-linked read assembly using targeted non-linear mapping models. Existing non-linear frameworks, such as the affine gap penalty model ([Zachariah et al., 2005](https://doi.org/10.1002/prot.20299)), are already developed and can be selectively deployed and weighted for pre-filtered X and Y chromosome linkage and loci. By deliberately integrating these locus-aware algorithmic controls, the structural mapping artifacts can be eliminated, thereby establishing a more reliable scRNA-seq framework capable of accurately capturing PAR gene expression dynamics and sex-associated biological signals.
 
-## Cell type deconvolution
-
-The robustness of cell type deconvolution relies on the accuracy of the underlying gene expression matrix. Inherently, a problematic count matrix will yield problematic cell type annotations. However, the exact extent to which this specific alignment artifact impacts global clustering remains uncertain. Because clustering algorithms compute cellular identity based on tens of thousands of genes simultaneously, a single or small number of mismapped genes may lack the statistical weight to alter a cluster.
-
-![**Figure 20:** Histogram of number of significant age associated DEGs among subclasses and supertypes from [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8); Y-axis is the number of DEGs; X-axis is subclasses or supertypes; The red box indicate Gm47283 ([Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8), figure 1h)](figure/Allen_gm47283.jpg)
-
-<br>
-
-Nevertheless, this mapping artifact undeniably affects downstream differential expression analyses, generating false positive and false negative markers. For example, as illustrated in Figure 20, the original study by [Jin et al., 2025](https://doi.org/10.1038/s41586-024-08350-8) classified *Gm47283* as a common aging-associated DEGs. Our analysis, however, reveals *Gm47283* has been mismapped.
-
-This computational artefact underscores that robust cell type annotation requires evaluation of biological metadata alongside algorithmic assumptions. It is imperative to include sex as a biological variable in future scRNA-seq research. Failure to stratify by sex may generate both false-negative and false-positive conclusions.
-
-## Insufficient package documentation
+## Limitations
 
 [Jin et al., (2025)](https://doi.org/10.1038/s41586-024-08350-8) conducted clustering using unpublished, in-house developed R package `scrattch.bigcat (v.0.0.1)` (https://github.com/AllenInstitute/scrattch.bigcat), which is a sub-package of `scrattch` package (https://alleninstitute.github.io/scrattch/) optimized for extremely large single-cell datasets by supporting parallel computing and in-disk data access. However, because [scrattch.bigcat (v.0.0.1)](https://github.com/AllenInstitute/scrattch.bigcat) wasn't formally released, it was poorly documented and failed to execute reliably within the local computational environment despite extensive troubleshooting. Thus, an alternative sub-package of [scrattch](https://alleninstitute.github.io/scrattch/), `scrattch.hicat` (https://github.com/AllenInstitute/scrattch.hicat), was utilized in this project. [scrattch.hicat](https://github.com/AllenInstitute/scrattch.hicat) doesn't support parallel computing and in-disk data access, but provides better documentation.
+
+## Conclusion
+
+Although scRNA-seq is an invaluable tool for profiling cellular heterogeneity and transcriptomic dynamics, its underlying algorithms exist inherent vulnerabilities. The anomalous mapping of *Gm47283* within female non-neuronal HPF populations exposes the fundamental limitations of linear read alignment and demonstrates how failing to stratify data by biological sex could generates false-negative conclusions. Ultimately, this investigation proves that rigorous bioinformatics demands more than advanced clustering parameters, it also requires strict integration of foundational biological variables. Specifically, stratifying datasets by sex, a frequently deprioritized variable, is necessary to isolate true biological variance from computational noise.
 
 # References {#references}
