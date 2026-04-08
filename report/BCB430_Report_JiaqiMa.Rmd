@@ -220,7 +220,7 @@ The *Gm47283* X-allele query yielded 2 Y-chromosome hits within the top 3 hits, 
 
 <br>
 
-The interspecies BLAST analysis revealed sequences similarity to *Gm47283* located on human chromosome 21. The Y-allele query yielded 5 human chromosome 21 hits within the top 5 hits, demonstrating an E-value of 0, 93~97% sequence identity, and 10~17% query coverage ([Supplementary Figure 3](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/Y_to_Human_BLAST.png)). The X-allele query yielded 11 human chromosome 21 hits within the top 11 hits, demonstrating an E-values ranging from 1e-43 to 5e-61, 81~90% sequence identity, and 7~12% query coverage ([Supplementary Figure 4](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/X_to_Human_BLAST.png)). The graphical representation indicates extensive fragmentation and truncation in both queries. The combination of high sequence identity, low query coverage, and extensive truncation implies the existence of a human paralog of *Gm47283* residing on chromosome 21.
+The interspecies BLAST analysis revealed sequences similarity to *Gm47283* located on human chromosome 21. The Y-allele query yielded 5 human chromosome 21 hits within the top 5 hits, demonstrating an E-value of 0, 93~97% sequence identity, and 10~17% query coverage ([Supplementary Figure 3](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/Y_to_human_BLAST.png)). The X-allele query yielded 11 human chromosome 21 hits within the top 11 hits, demonstrating an E-values ranging from 1e-43 to 5e-61, 81~90% sequence identity, and 7~12% query coverage ([Supplementary Figure 4](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/X_to_human_BLAST.png)). The graphical representation indicates extensive fragmentation and truncation in both queries. The combination of high sequence identity, low query coverage, and extensive truncation implies the existence of a human paralog of *Gm47283* residing on chromosome 21.
 
 ![**Figure 18:** *Gm47283* interspecies BLAST result; The left panel is X-allele query; The right panel is Y-allele query; Human chromosome 21 hits both queries were selected and visualized using graphical representation tool in BLAST website](figure/mice_to_human_BLAST.png)
 
@@ -288,9 +288,9 @@ Screenshot of X to Y BLAST result
 [Supplementary Figure 2](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/Y_to_X_BLAST.png)
 Screenshot of Y to X BLAST result
 
-[Supplementary Figure 3](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/Y_to_Human_BLAST.png)
+[Supplementary Figure 3](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/Y_to_human_BLAST.png)
 Screenshot of Y to Human BLAST result
 
-[Supplementary Figure 4](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/X_to_Human_BLAST.png)
+[Supplementary Figure 4](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/X_to_human_BLAST.png)
 Screenshot of X to Human BLAST result
 
