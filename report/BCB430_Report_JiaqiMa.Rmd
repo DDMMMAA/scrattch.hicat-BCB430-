@@ -278,8 +278,6 @@ A computational limitation within this study must be acknowledged. [Jin et al., 
 
 Although scRNA-seq remains an invaluable tool for profiling cellular heterogeneity and transcriptomic dynamics, its underlying algorithms exist inherent vulnerabilities. The anomalous mapping of *Gm47283* within female non-neuronal HPF populations exposes the critical limitations of linear read alignment and demonstrates how failing to stratify data by biological sex could generates false-negative conclusions. Ultimately, this investigation proves that robust cell type annotation demands more than advanced clustering algorithms, it also requires more rigorous read mapping model and strict integration of foundational biological variables. Specifically, stratifying datasets by sex, a frequently deprioritized variable, is necessary to isolate true biological variance from computational noise.
 
-# References {#references}
-
 # Supplementary information
 
 [Supplementary Figure 1](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/X_to_Y_BLAST.png)
@@ -294,3 +292,4 @@ Screenshot of Y to Human BLAST result
 [Supplementary Figure 4](https://github.com/DDMMMAA/scrattch.hicat-BCB430-/blob/master/report/figure/X_to_human_BLAST.png)
 Screenshot of X to Human BLAST result
 
+# References {#references}
